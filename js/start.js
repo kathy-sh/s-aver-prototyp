@@ -18,7 +18,7 @@ function viewLogin(){const s=ui('login',{who:'AN',more:false,err:false,forgot:fa
    <div class="or"><i></i><span>nebo</span><i></i></div>
    ${ssoBtn('google')}${ssoBtn('microsoft')}${s.more?`${ssoBtn('apple')}<button class="sso" data-a="sso" data-k="sso">${ic('key')}Firemní přihlášení (SSO)</button>`:''}
    <div class="ct"><a class="small row" style="justify-content:center;display:inline-flex" data-a="moreopts">${s.more?'Méně možností':'Další možnosti přihlášení'}${ic(s.more?'arrow-up-2':'arrow-down','s16')}</a></div>`;
-  const persona=`<div class="proto-who"><span class="small">Prototyp: přihlásit jako</span><div class="seg">${Object.entries(PERSONAS).map(([k,v])=>`<button class="${s.who===k?'on':''}" data-a="pickp" data-id="${k}">${v[0]}</button>`).join('')}</div></div>`;
+  const persona=`<div class="proto-who"><span class="small">Prototyp: přihlásit jako</span><div class="seg">${Object.entries(PERSONAS).map(([k,v])=>`<button class="${s.who===k?'on':''}" data-a="pickp" data-id="${k}">${v[0].replace(/ (.*)/,`<span class="pw-l"> $1</span>`)}</button>`).join('')}</div></div>`;
   return `<div class="login"><div class="login-card">${body}</div>${persona}</div>`;}
 ACT.pickp=el=>{Object.assign(UI.login,{who:el.dataset.id,err:false});render();};
 ACT.moreopts=()=>{UI.login.more=!UI.login.more;render();};
