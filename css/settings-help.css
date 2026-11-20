@@ -1,0 +1,109 @@
+/* 5. kolo – Nastavení a Nápověda. Načítá se po styles.css. */
+
+/* Nastavení: vlevo sekce, vpravo obsah */
+.set-wrap{display:grid;grid-template-columns:256px minmax(0,1fr);gap:24px;align-items:start}
+.set-nav{position:sticky;top:0;background:#fff;border-radius:8px;padding:16px 8px;max-height:calc(100vh - 160px);overflow:auto}
+.set-nav .set-search{margin:0 8px 8px}
+.set-gh{font:500 12px/16px Poppins;color:var(--n500);padding:16px 8px 8px}
+.set-g:first-of-type .set-gh{padding-top:8px}
+.set-l{display:flex;align-items:center;gap:8px;width:100%;min-height:40px;padding:8px;border-radius:8px;color:var(--n700);font:400 14px/20px Poppins;text-align:left;background:none;border:0;cursor:pointer}
+.set-l .ic{color:var(--n500);flex:none}
+.set-l:hover{background:var(--n100);color:var(--n900);text-decoration:none}
+.set-l.on{background:var(--teal-bg);color:var(--teal-a);font-weight:500}
+.set-l.on .ic{color:var(--teal-a)}
+.set-l[hidden],.set-g[hidden]{display:none}
+.set-none{padding:8px}
+.set-main{min-width:0}
+.set-main>.card+.card,.set-main>.card+.tbl-card,.set-main>.tbl-card+.card,.set-main>.grid+.card,.set-main>.set-int+.card{margin-top:16px}
+.set-h{margin-bottom:16px}
+.set-h h2{font:600 20px/28px Poppins}
+.set-h p{margin-top:4px}
+.set-hint{margin-top:4px}
+.set-row.dis{cursor:default;opacity:.6}
+.set-row:hover .spacer{color:var(--n900)}
+
+/* Hledání v seznamech */
+.set-search{position:relative;flex:1;max-width:360px}
+.set-search .sib{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--n500);display:flex;pointer-events:none}
+.set-search .sib svg{width:16px;height:16px}
+.set-search .inp{padding-left:40px}
+.set-nav .set-search{max-width:none}
+.set-tools{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.set-tools .set-chips{margin:0}
+.set-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.set-chip{height:32px;padding:0 16px;border-radius:16px;border:1px solid var(--n200);background:#fff;color:var(--n700);font:400 12px/16px Poppins;cursor:pointer}
+.set-chip:hover{border-color:var(--teal);color:var(--n900)}
+.set-chip.on{border-color:var(--teal-a);background:var(--teal-bg);color:var(--teal-a);font-weight:500}
+.set-chip.on .mute{color:var(--teal-a)}
+.set-pg{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:16px}
+.set-pg .more[disabled]{opacity:.4;cursor:default;background:none}
+.tbl tr[data-a] td:last-child .ic{color:var(--n500)}
+.set-mx .cb{width:20px;height:20px}
+
+/* Číselníky */
+.set-cis{display:grid;grid-template-columns:256px minmax(0,1fr);gap:16px;align-items:start}
+.set-cis-l{padding:8px}
+.set-ord{list-style:none;margin:0;padding:0}
+.set-ord li{display:flex;align-items:center;gap:8px;padding:4px 0}
+.set-ord .inp{height:40px;flex:1}
+.set-ord .more[disabled]{opacity:.3;cursor:default;background:none}
+.set-n{width:24px;text-align:right}
+.set-use{width:40px;text-align:right}
+.chip button{display:inline-flex;color:var(--n500)}.chip button:hover{color:var(--teal-a)}
+
+/* Integrace, podpis, kredity */
+.set-int{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.set-int .card{margin:0;display:flex;flex-direction:column}
+.set-int .card .btn{align-self:flex-start;margin-top:auto}
+.set-sig{border:1px solid var(--n200);border-radius:8px;padding:16px;font-size:14px;line-height:20px;min-height:88px}
+.set-logo{display:grid;place-items:center;width:136px;height:56px;border-radius:8px;background:linear-gradient(90deg,var(--dark),var(--teal));padding:8px}
+.set-logo svg{max-width:100%;max-height:40px}
+.set-key{font:500 14px/20px ui-monospace,Consolas,monospace;background:var(--n100);border-radius:8px;padding:8px 16px}
+.set-pk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.set-pkg{display:flex;flex-direction:column;gap:4px;padding:16px;border:1px solid var(--n200);border-radius:8px;cursor:pointer}
+.set-pkg:hover{border-color:var(--teal)}
+.set-pkg:has(input:checked){border-color:var(--teal-a);box-shadow:inset 0 0 0 1px var(--teal-a)}
+.set-pkg input{position:absolute;opacity:0}
+.stat .btn{display:inline-flex}
+
+/* Nápověda */
+.hp-hero{background:#fff;border-radius:8px;padding:32px;margin-bottom:24px;text-align:center}
+.hp-hero h2{font:600 20px/28px Poppins;margin-bottom:16px}
+.hp-hero .set-search{max-width:560px;margin:0 auto}
+.hp-hero .set-search .inp{height:48px}
+.hp-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.hp-cat{display:flex;gap:16px;align-items:flex-start;background:#fff;border-radius:8px;padding:16px;border:1px solid transparent;color:var(--n900);transition:border-color .12s}
+.hp-cat:hover{border-color:var(--teal);text-decoration:none}
+.hp-cat .hp-i{width:40px;height:40px;border-radius:8px;background:var(--teal-bg);color:var(--teal-a);display:grid;place-items:center;flex:none}
+.hp-cat b{display:block;font:600 14px/20px Poppins}
+.hp-cat span.small{display:block;margin-top:4px}
+.hp-wrap{display:grid;grid-template-columns:256px minmax(0,1fr);gap:24px;align-items:start}
+.hp-acc{background:#fff;border-radius:8px}
+.hp-acc details{border-bottom:1px solid var(--n100)}
+.hp-acc details:last-child{border:0}
+.hp-acc summary{list-style:none;display:flex;align-items:center;gap:16px;padding:16px 24px;font:500 14px/20px Poppins;cursor:pointer;border-radius:8px}
+.hp-acc summary::-webkit-details-marker{display:none}
+.hp-acc summary:hover{background:var(--n50)}
+.hp-acc summary .ic{margin-left:auto;color:var(--n500);transition:transform .15s;flex:none}
+.hp-acc details[open] summary .ic{transform:rotate(180deg)}
+.hp-acc .hp-a{padding:0 24px 16px;font-size:14px;line-height:22px;color:var(--n700)}
+.hp-acc .hp-a p+p,.hp-acc .hp-a p+ol,.hp-acc .hp-a ol+p{margin-top:8px}
+.hp-acc .hp-a ol,.hp-acc .hp-a ul{padding-left:24px}
+.hp-acc .hp-a b{color:var(--n900);font-weight:500}
+.hp-sec+.hp-sec{margin-top:24px}
+.hp-sec h3{font:600 16px/24px Poppins;margin-bottom:8px}
+.hp-sec h3 .small{font-weight:400;margin-left:8px}
+.hp-sup{display:flex;align-items:center;gap:16px;background:#fff;border-radius:8px;padding:24px;margin-top:24px}
+.hp-keys td:first-child{width:200px}
+kbd{display:inline-block;min-width:24px;padding:0 8px;border:1px solid var(--n200);border-bottom-width:2px;border-radius:4px;background:#fff;font:500 12px/20px Poppins;text-align:center;color:var(--n900)}
+mark{background:var(--amber-bg);color:inherit;border-radius:2px}
+.hp-cats[hidden],#hp-res[hidden]{display:none}
+#hp-res{margin-bottom:24px}
+.set-cis>.card{margin:0}
+.set-use{width:80px}
+/* Role a viditelnost: tabulka se vejde do šířky obsahu */
+.set-role{table-layout:fixed;width:100%}
+.set-role th,.set-role td{padding-left:8px;padding-right:8px}
+.set-role th:first-child,.set-role td:first-child{width:120px;padding-left:16px}
+.set-role select.inp{width:100%;min-width:0;padding:0 24px 0 8px;background-position:right 4px center}
+.set-role th:nth-child(4){width:184px}

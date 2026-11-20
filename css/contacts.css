@@ -1,0 +1,69 @@
+/* 5. kolo – styly modulu Kontakty. Načítá se po styles.css. */
+
+/* Lišta výběru: jen Hromadné akce a Zrušit výběr */
+.bulk .btn.bulk-main{border-color:#fff;background:#fff;color:var(--dark)}
+.bulk .btn.bulk-main:hover{background:var(--teal-bg)}
+
+/* Okno Hromadné akce: řádek = ikona, název, krátký popis */
+.bk-list{display:flex;flex-direction:column;margin:16px -8px 0}
+.bk-it{display:flex;align-items:center;gap:16px;width:100%;padding:8px;border:0;border-radius:8px;background:none;text-align:left;font:inherit;color:var(--n900);cursor:pointer}
+.bk-it:hover{background:var(--n50)}
+.bk-it:hover .med{color:var(--teal-a)}
+.bk-it>.ic:last-child{margin-left:auto;color:var(--n400)}
+.bk-it:hover>.ic:last-child{color:var(--teal-a)}
+.bk-it[disabled]{cursor:not-allowed;opacity:.5}.bk-it[disabled]:hover{background:none}.bk-it[disabled]:hover .med{color:inherit}
+.bk-ic{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--teal-bg);color:var(--teal-a);flex:none}
+.bk-it.dng .bk-ic{background:var(--red-bg);color:var(--red)}
+.bk-it.dng:hover .med{color:var(--red)}
+.bk-b{display:flex;flex-direction:column;min-width:0}
+.bk-b .small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.modal .ft .spacer{flex:1}
+
+/* Výběrové řádky v oknech (štítky, stav, propojení, správci): celý řádek klikací, 16 px od checkboxu */
+.pick-list{display:flex;flex-direction:column;margin:0 -8px}
+.pick-r{display:flex;align-items:center;gap:16px;width:100%;min-height:48px;padding:8px;border:0;border-radius:8px;background:none;text-align:left;font:inherit;color:var(--n900);cursor:pointer}
+.pick-r:hover{background:var(--n50)}
+.pick-r.on{background:var(--teal-bg)}
+.pick-r .link-b{display:flex;flex-direction:column;min-width:0}
+.pick-r .link-b .med{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick-r .cb{margin:0;flex:none}
+.lk-res{max-height:264px;overflow:auto;border:1px solid var(--n200);border-radius:8px;margin:0;padding:8px}
+
+/* Správci kontaktu */
+.own-main{display:flex;align-items:center;gap:16px;margin-top:16px;padding:16px;border-radius:8px;background:var(--n50)}
+.own-main .own-b{display:flex;flex-direction:column}
+.own-main .badge{margin-left:auto}
+.own-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.own-chips .chip{height:32px;padding:0 8px 0 4px;gap:8px;font-size:12px}
+.own-chips .chip .av{width:24px;height:24px;font-size:10px}
+.own-pick{max-height:320px;overflow:auto;margin:8px -8px 0;padding:0 8px}
+.own-pick .pick-r{margin:0 -8px;width:calc(100% + 16px)}
+.own-g{padding:16px 0 4px}.own-g:first-child{padding-top:8px}
+
+/* Štítky v editaci: pole se štítky a nabídkou */
+.tagbox{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-height:40px;padding:4px 8px;border:1px solid var(--n200);border-radius:8px;background:#fff;cursor:text}
+.tagbox:focus-within{border-color:var(--teal-a)}
+.tb-chips{display:contents}
+.tb-chips .chip{height:28px}
+.tb-chips .chip button{border:0;background:none;padding:0 0 0 4px;cursor:pointer}
+.tb-chips .chip button:hover{color:var(--red)}
+.tb-in{flex:1;min-width:120px;height:30px;border:0;outline:0;font:inherit;padding:0 8px;background:none}
+.tb-dd{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;background:#fff;border-radius:8px;box-shadow:var(--shadow);padding:8px;max-height:280px;overflow:auto}
+.tb-dd .it{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:8px;border:0;border-radius:8px;background:none;font:inherit;font-size:14px;color:var(--n900);cursor:pointer}
+.tb-dd .it:hover,.tb-dd .it.act{background:var(--n50)}
+
+/* Integrace: ikona služby místo písmene */
+.integ-ic{width:32px;height:32px;flex:none;display:grid;place-items:center}
+.integ-ic svg{width:28px;height:28px;display:block}
+.integ-ic.gen{border-radius:8px;background:var(--teal-bg);color:var(--teal-a)}
+.integ-r{align-items:center}
+
+/* Hover: odkazové řádky v kartách na celou šíři */
+.card .link-r{max-width:none;width:calc(100% + 16px)}
+.cs-col .link-r,.cs-col .own-r{width:calc(100% + 16px)}
+.pop .link-r,.pop .own-r{width:calc(100% + 16px);max-width:none}
+.tl-l:focus-visible,.pick-r:focus-visible,.bk-it:focus-visible{outline:2px solid var(--teal-a);outline-offset:-2px}
+.tb-dd.up{top:auto;bottom:calc(100% + 4px)}
+.pick-r input[type=radio]{width:18px;height:18px;margin:0;flex:none;accent-color:var(--teal-a)}
+.tbl td .chip{max-width:120px;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:middle;line-height:24px}
+.tbl.frozen td:nth-child(2),.tbl td:nth-child(2):has(> .row.med){white-space:normal;max-width:200px}

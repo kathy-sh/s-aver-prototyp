@@ -1,0 +1,918 @@
+/* S-aver – místní prototyp. Tokeny odpovídají proměnným ve Figmě (01_Foundations). */
+@font-face{font-family:Poppins;font-weight:400;src:url(assets/fonts/Poppins-Regular.ttf)}
+@font-face{font-family:Poppins;font-weight:500;src:url(assets/fonts/Poppins-Medium.ttf)}
+@font-face{font-family:Poppins;font-weight:600;src:url(assets/fonts/Poppins-SemiBold.ttf)}
+:root{
+  --n900:#131a1c;--n700:#4b5563;--n500:#667580;--n400:#99999e;--n200:#e4e7e9;--n100:#f3f3f3;--n50:#f1f9fa;--white:#fff;
+  --gray:#77676c;--teal:#41acb6;--teal-a:#237a84;--dark:#224f5d;--teal-bg:#e3f4f5;
+  --red:#b91c1c;--red-bg:#fbe3e1;--red-solid:#f04438;--amber:#b45309;--amber-bg:#fdf1d8;--green:#15803d;--green-bg:#dcf7e3;--violet:#6d28d9;--violet-bg:#efe7fd;--blue:#1d4ed8;--blue-bg:#e0eaff;
+  --shadow:0 4px 12px rgba(0,0,0,.12);--head-shadow:0 2px 16px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font:400 14px/20px Poppins,sans-serif;color:var(--n900);background:var(--n50);min-width:1200px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+a{color:var(--teal-a);text-decoration:none;cursor:pointer}a:hover{text-decoration:underline}
+h1,h2,h3,p{margin:0}
+.ic{display:inline-flex;width:20px;height:20px;flex:none}.ic svg{width:100%;height:100%;display:block}
+.ic.s16{width:16px;height:16px}.ic.s24{width:24px;height:24px}.ic.s32{width:32px;height:32px}
+:focus-visible{outline:2px solid var(--teal-a);outline-offset:2px;border-radius:4px}
+
+/* Rámec aplikace */
+.header{position:fixed;inset:0 0 auto 0;height:64px;z-index:30;display:flex;align-items:center;padding:0 24px;background:linear-gradient(90deg,var(--dark),var(--teal));box-shadow:var(--head-shadow);color:#fff}
+.logo{width:107px;height:32px;margin-right:48px;display:block;cursor:pointer}
+.search{position:absolute;left:50%;transform:translateX(-50%);width:400px}
+.search .box{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:8px;background:rgba(255,255,255,.2)}
+.search input{flex:1;background:none;border:0;outline:0;color:#fff}.search input::placeholder{color:rgba(255,255,255,.85)}
+.search-res{position:absolute;top:48px;left:0;right:0;background:#fff;color:var(--n900);border-radius:8px;box-shadow:var(--shadow);padding:8px;max-height:440px;overflow:auto}
+.search-res h4{margin:8px 8px 4px;font:600 12px/16px Poppins;color:var(--n500);text-transform:uppercase}
+.search-res a{display:flex;gap:8px;justify-content:space-between;padding:8px;border-radius:8px;color:var(--n900)}.search-res a:hover{background:var(--n50);text-decoration:none}
+.search-res small{color:var(--n500);font-size:12px}
+.head-actions{margin-left:auto;display:flex;align-items:center;gap:24px}
+.head-btn{position:relative;color:#fff;display:flex;align-items:center;gap:8px;font-size:12px}
+.dot{position:absolute;top:-4px;right:-6px;min-width:16px;height:16px;border-radius:8px;background:var(--red-solid);font:600 10px/16px Poppins;text-align:center;padding:0 4px;color:#fff}
+.me{width:40px;height:40px;border-radius:50%;border:2px solid #fff;object-fit:cover;cursor:pointer}
+.sidebar{position:fixed;top:64px;bottom:0;left:0;width:240px;background:var(--dark);padding:24px 0;overflow:auto;z-index:10}
+.nav{display:flex;align-items:center;gap:16px;padding:12px 32px;color:#fff;font-size:16px;line-height:24px}.nav:hover{background:rgba(255,255,255,.06);text-decoration:none}
+.nav.on{color:var(--teal)}
+.sub{display:block;padding:4px 32px 4px 68px;color:#fff;font-size:14px}.sub:hover{text-decoration:none;background:rgba(255,255,255,.06)}.sub.on{color:var(--teal)}
+.main{margin:64px 0 0 240px;min-height:calc(100vh - 64px);padding:24px 32px 48px;display:flex;flex-direction:column}
+.main.has-foot{padding-bottom:0}
+.wrap{width:100%;max-width:1440px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+
+/* Základní prvky */
+.crumbs{font-size:12px;line-height:16px;color:var(--n700);margin-bottom:24px}.crumbs a{color:var(--n700)}.crumbs span{margin:0 4px}
+.page-head{display:flex;align-items:center;gap:16px;margin-bottom:24px;min-height:40px}
+.page-head h1{font:600 24px/32px Poppins}.page-head .acts{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 16px;border-radius:8px;font-size:12px;line-height:16px;white-space:nowrap;border:1px solid var(--gray);background:#fff;color:var(--n700);transition:background .12s}
+.btn:hover{background:var(--n100)}.btn.pri{background:var(--teal-a);border-color:var(--teal-a);color:#fff}.btn.pri:hover{background:var(--dark)}
+.btn.danger{background:var(--red-solid);border-color:var(--red-solid);color:#fff}.btn.danger:hover{background:var(--red)}
+.btn.ghost{border-color:rgba(255,255,255,.6);background:transparent;color:#fff}.btn.ghost:hover{background:rgba(255,255,255,.14)}
+.btn.white{border-color:#fff;background:#fff;color:var(--dark)}.btn.white:hover{background:var(--n50)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.more{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--n700)}.more:hover{background:var(--n100)}
+.card{background:#fff;border-radius:8px;padding:24px}.card+.card{margin-top:16px}
+.card h2{font:600 16px/24px Poppins}.card .sub-t{font-size:12px;line-height:16px;color:var(--n500)}
+.card-head{display:flex;align-items:center;gap:16px;margin-bottom:16px}.card-head .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+.field label,.lab{display:block;font-size:12px;line-height:16px;color:var(--n500);margin-bottom:4px}
+.val{min-height:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.over{font:400 12px/20px Poppins;text-transform:uppercase;color:var(--n500)}
+.sec-t{font:600 13px/20px Poppins;margin:0 0 16px}
+hr.sep{border:0;border-top:1px solid var(--n100);margin:24px 0}
+.badge{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:6px;font:600 10px/16px Poppins;text-transform:uppercase;background:var(--n100);color:var(--n700);white-space:nowrap}
+.b-red{background:var(--red-bg);color:var(--red)}.b-amb{background:var(--amber-bg);color:var(--amber)}.b-grn{background:var(--green-bg);color:var(--green)}.b-blu{background:var(--blue-bg);color:var(--blue)}.b-tea{background:var(--teal-bg);color:var(--teal-a)}.b-vio{background:var(--violet-bg);color:var(--violet)}
+.chip{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 8px;border-radius:8px;border:1px solid var(--n200);font-size:12px;background:#fff;white-space:nowrap}
+.chip.soft{border:0;background:var(--n50);color:var(--dark);height:24px}
+.chip button{color:var(--n500);font-size:14px;line-height:1}
+.av{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;border-radius:50%;background:var(--dark);color:#fff;font:600 10px/16px Poppins}
+.av.a32{width:32px;height:32px}.av.a40{width:40px;height:40px;font-size:13px}.av.a88{width:88px;height:88px;font-size:28px;line-height:32px}
+img.av{object-fit:cover;background:var(--n100)}
+.who{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.mute{color:var(--n500)}.small{font-size:12px;line-height:16px}.sb{font-weight:600}.med{font-weight:500}.red{color:var(--red)}.amb{color:var(--amber)}.grn{color:var(--green)}.tea{color:var(--teal-a)}.vio{color:var(--violet)}
+.spacer{flex:1}.row{display:flex;align-items:center;gap:8px}.nowrap{white-space:nowrap}
+input.inp,select.inp,textarea.inp{width:100%;height:40px;padding:0 16px;border:1px solid var(--n200);border-radius:8px;background:#fff;outline:0}
+textarea.inp{height:auto;min-height:88px;padding:8px 16px;resize:vertical}
+input.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--teal-a)}
+.inp.err{border-color:var(--red)}.err-t{color:var(--red);font-size:12px;line-height:16px;margin-top:4px}
+.cb{appearance:none;width:24px;height:24px;margin:0;border:1px solid var(--gray);border-radius:6px;background:#fff;cursor:pointer;flex:none;display:inline-grid;place-content:center;vertical-align:middle}
+.cb:checked{background:var(--teal-a);border-color:var(--teal-a)}.cb:checked::after{content:"";width:12px;height:6px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.cb.ind{background:var(--teal-a);border-color:var(--teal-a)}.cb.ind::after{content:"";width:12px;height:2px;background:#fff}
+.switch{position:relative;display:inline-block;width:40px;height:24px;flex:none}.switch input{opacity:0;width:100%;height:100%;margin:0;position:absolute;cursor:pointer}.switch i{position:absolute;inset:0;border-radius:12px;background:var(--n400);pointer-events:none;transition:.15s}.switch i::after{content:"";position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}.switch input:checked+i{background:var(--teal-a)}.switch input:checked+i::after{left:18px}
+
+/* Tabulky */
+.tbl-card{background:#fff;border-radius:8px;overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse}
+.tbl th{font:400 12px/16px Poppins;text-transform:uppercase;color:var(--n700);text-align:left;padding:16px 8px;white-space:nowrap;background:var(--n50)}
+.tbl th.sort{cursor:pointer}.tbl th.sort:hover{color:var(--n900)}.tbl th .ic{vertical-align:middle;margin-left:4px}
+.tbl td{padding:8px;height:48px;white-space:nowrap}
+.tbl tbody tr{cursor:pointer}.tbl tbody tr:nth-child(even) td{background:#f7f7f7}.tbl tbody tr:nth-child(odd) td{background:#fff}.tbl tbody tr:hover td{background:var(--teal-bg)}
+.tbl tr.sel td{background:var(--teal-bg)!important}.tbl td:first-child,.tbl th:first-child{padding-left:16px}.tbl td:last-child,.tbl th:last-child{padding-right:16px}
+.tbl .num{text-align:right}
+.st{display:inline-flex;align-items:center;gap:8px}.st i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.rate{display:inline-grid;place-content:center;width:32px;height:32px;border-radius:50%;font-weight:500;font-size:12px}
+.r1{background:#fbe3e1;color:#b91c1c}.r2{background:#fde6cf;color:#b45309}.r3{background:#fdf1d8;color:#92620a}.r4{background:#ecf7d9;color:#4d7c0f}.r5{background:#dcf7e3;color:#15803d}
+.act-ic{width:24px;height:24px;border-radius:50%;display:inline-grid;place-content:center;color:#fff}.act-ic .ic{width:14px;height:14px}
+.act-call{background:#3b82f6}.act-mail{background:#10a37f}.act-meet{background:#a855f7}
+.foot{position:sticky;bottom:0;margin:24px -32px 0;height:48px;padding:0 32px;display:flex;align-items:center;gap:32px;background:linear-gradient(90deg,var(--dark),var(--teal));color:#fff;font-size:12px;z-index:5}
+.foot select{background:transparent;border:0;color:#fff;font-size:12px}.foot select option{color:var(--n900)}
+.foot .pg{margin-left:auto;display:flex;align-items:center;gap:8px}.foot .pg input{width:32px;height:24px;border:0;border-radius:4px;text-align:center;font-size:12px;color:var(--n900)}
+.foot .pg button{width:24px;height:24px;border-radius:4px;background:var(--dark);display:grid;place-content:center;color:#fff}.foot .pg button[disabled]{opacity:.4}
+.bulk{position:sticky;top:72px;z-index:6;display:flex;align-items:center;gap:8px;padding:8px 16px;margin-bottom:8px;background:var(--dark);color:#fff;border-radius:8px}
+.filters{background:#fff;border-radius:8px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:repeat(4,1fr) auto;gap:16px;align-items:end}
+.act-chips{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.tile-t{display:flex;align-items:center;gap:16px;padding:16px;background:#fff;border-radius:8px;border:1px solid transparent;text-align:left;transition:.12s}
+.tile-t:hover{border-color:var(--teal)}.tile-t.on{border-color:var(--teal-a);box-shadow:inset 0 0 0 1px var(--teal-a)}
+.tile-t b{font:600 22px/28px Poppins}.tile-t span{font:400 12px/16px Poppins;text-transform:uppercase}
+.stat{background:#fff;border-radius:8px;padding:16px 24px}.stat b{display:block;font:600 22px/28px Poppins}.stat span{font-size:12px;line-height:16px;text-transform:uppercase}
+
+/* Záložky */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--n200);margin-bottom:24px;overflow-x:auto}
+.tab{padding:8px 16px 12px;font:500 14px/20px Poppins;color:var(--n700);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}.tab:hover{color:var(--n900);text-decoration:none}
+.tab.on{color:var(--teal-a);border-color:var(--teal-a)}
+.ent-head{display:flex;align-items:center;gap:24px;margin-bottom:24px}.ent-head h1{font:600 24px/32px Poppins;margin-bottom:8px}
+.summary{display:flex;gap:40px;background:#fff;border-radius:8px;padding:16px 24px;margin-bottom:24px;flex-wrap:wrap}
+
+/* Úkoly */
+.group{background:#fff;border-radius:8px;padding:16px 24px;margin-bottom:16px}
+.group.alert{box-shadow:inset 0 0 0 1px var(--red-bg)}
+.g-h{display:flex;align-items:center;gap:8px;font:600 13px/20px Poppins;margin-bottom:8px}.g-h i{width:6px;height:6px;border-radius:50%;background:currentColor}.g-h em{font:400 12px Poppins;color:var(--n500)}
+.task{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--n100);align-items:flex-start;transition:opacity .2s}.task:last-child{border:0}
+.task .body{flex:1;min-width:0}.task .t{font:600 14px/20px Poppins;margin:4px 0;cursor:pointer;display:block;color:var(--n900)}.task .t:hover{color:var(--teal-a)}.task.done .t{text-decoration:line-through;color:var(--n500)}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;line-height:16px;color:var(--n500)}.meta b{font-weight:400;color:var(--n900)}
+
+/* Plovoucí prvky */
+.pop{position:absolute;z-index:40;background:#fff;border-radius:8px;box-shadow:var(--shadow);padding:8px;min-width:200px}
+.pop button.it,.pop a.it{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:8px;border-radius:8px;font-size:14px;color:var(--n900)}.pop .it:hover{background:var(--n50);text-decoration:none}.pop .it.dng{color:var(--red)}.pop hr{border:0;border-top:1px solid var(--n100);margin:4px 0}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(19,26,28,.45);display:flex;align-items:flex-start;justify-content:center;padding:96px 24px;overflow:auto;animation:fade .12s}
+.modal{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:24px;width:520px;max-width:100%}.modal.w640{width:640px}
+.modal h2{font:600 16px/24px Poppins;margin-bottom:8px}.modal .ft{display:flex;justify-content:flex-end;gap:8px;margin-top:24px}
+.stack>*+*{margin-top:16px}
+.toast{position:fixed;left:calc(50% + 120px);transform:translateX(-50%);bottom:32px;z-index:70;display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:8px;background:var(--dark);color:#fff;box-shadow:var(--shadow);animation:rise .18s}
+.toast button{color:#fff;text-decoration:underline;margin-left:8px}
+.tip{position:fixed;z-index:80;max-width:280px;padding:8px;border-radius:8px;background:var(--n900);color:#fff;font-size:12px;line-height:16px;pointer-events:none}
+.panel{position:fixed;top:72px;right:24px;width:400px;z-index:40;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:16px}
+.noti{display:flex;gap:8px;padding:8px;border-radius:8px;cursor:pointer}.noti:hover{background:var(--n100)}.noti.un{background:var(--n50)}.noti.un .m{font-weight:500}.noti .d{width:8px;height:8px;border-radius:50%;background:var(--teal-a);margin-top:6px;flex:none}.noti .d.o{visibility:hidden}
+.banner{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:8px;margin-bottom:16px;background:var(--amber-bg);color:var(--amber)}.banner.err{background:var(--red-bg);color:var(--red)}
+.empty{text-align:center;padding:48px 24px}.empty .ic{width:48px;height:48px;color:var(--n400);margin-bottom:16px}.empty h3{font:600 16px/24px Poppins;margin-bottom:4px}.empty p{color:var(--n500);margin-bottom:16px}
+.form-foot{position:sticky;bottom:0;margin-top:24px;padding:16px 0;display:flex;justify-content:flex-end;gap:8px;background:var(--n50)}
+.hint{display:inline-grid;vertical-align:middle;color:var(--teal-a);cursor:help}
+.sens{display:inline-flex;align-items:center;gap:8px}.sens button{color:var(--n500)}.sens button:hover{color:var(--teal-a)}
+.tl{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--n100)}.tl:last-child{border:0}
+.tl .i{width:32px;height:32px;border-radius:50%;display:grid;place-content:center;background:var(--teal-bg);color:var(--teal-a);flex:none}
+.prog{height:8px;border-radius:4px;background:var(--n100);overflow:hidden;display:flex;gap:2px}.prog i{display:block;height:100%;background:var(--teal-a)}
+.matrix{border-collapse:separate;border-spacing:2px;width:100%}.matrix th{font:400 12px/16px Poppins;color:var(--n900);padding:8px 0;text-align:center}.matrix th.we{color:var(--n400)}.matrix th.today{color:var(--teal-a);font-weight:600}.matrix td{height:24px;padding:0;text-align:center}.matrix td.nm{text-align:left;white-space:nowrap;padding:8px 16px 8px 0;width:192px}
+.d{display:grid;place-content:center;width:100%;height:24px;border-radius:4px;background:var(--n100);font:600 10px/16px Poppins;color:#fff}.d.P{background:var(--green)}.d.Z{background:var(--amber)}.d.D{background:var(--violet)}.d.N{background:var(--red)}.d.W{background:#e0e6e7}
+.lg{display:flex;gap:16px;font-size:12px;color:var(--n700)}.lg i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:8px}
+
+/* Přihlášení */
+.auth{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:#fff}
+.auth .art{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--dark),var(--teal-a) 60%,var(--teal));color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between}
+.auth .art .wm{position:absolute;right:-120px;bottom:-96px;width:640px;opacity:.08}
+.auth .form{display:flex;align-items:center;justify-content:center;padding:48px}
+.persona{display:flex;align-items:center;gap:16px;width:100%;padding:16px;border:1px solid var(--n200);border-radius:8px;text-align:left;margin-bottom:8px}.persona:hover{border-color:var(--teal)}.persona.on{border-color:var(--teal-a);box-shadow:inset 0 0 0 1px var(--teal-a)}
+
+/* Přehled – dashboard */
+.dash{display:flex;flex-direction:column;gap:24px}
+.hero{position:relative;overflow:hidden;border-radius:12px;background:linear-gradient(115deg,var(--dark) 0%,var(--teal-a) 62%,var(--teal) 100%);color:#fff;padding:32px 32px 64px;display:grid;grid-template-columns:1fr 416px;gap:32px;align-items:start}
+.hero .wm{position:absolute;left:38%;top:-64px;width:420px;height:420px;opacity:.07;pointer-events:none}
+.hero .meta-l{display:flex;align-items:center;gap:16px;font-size:14px;margin-bottom:16px;opacity:.95}.hero .meta-l .row{gap:8px}
+.hero h1{font:600 36px/44px Poppins;margin-bottom:8px;position:relative}
+.hero .lead{font-size:16px;line-height:24px;max-width:520px;position:relative}
+.hero .lead b{font-weight:600}
+.hero .tools{display:flex;gap:8px;margin-top:24px;align-items:center;position:relative}
+.seg{display:inline-flex;padding:2px;border-radius:8px;background:rgba(255,255,255,.18)}.seg button{height:28px;padding:0 16px;border-radius:6px;font-size:12px;color:#fff}.seg button.on{background:#fff;color:var(--dark);font-weight:500}
+.next{position:relative;background:#fff;color:var(--n900);border-radius:8px;padding:24px;box-shadow:var(--shadow)}
+.next .over{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--dark);margin-bottom:8px}
+.next h3{font:600 16px/24px Poppins;margin-bottom:8px}
+.next .acts{display:flex;gap:8px;margin-top:16px}
+.fade-in{animation:rise .22s}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:-72px 32px 0;position:relative;z-index:2}
+.kpi{display:flex;align-items:center;gap:16px;background:#fff;border-radius:8px;padding:16px;box-shadow:var(--shadow);text-align:left;transition:transform .12s}
+.kpi:hover{transform:translateY(-2px);text-decoration:none}
+.kpi .ring{width:48px;height:48px;border-radius:50%;display:grid;place-content:center;flex:none}
+.kpi b{display:block;font:600 24px/32px Poppins}.kpi span{display:block;font-size:12px;line-height:16px;color:var(--n900);text-transform:uppercase}
+.dash-g{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;align-items:start}
+.dash-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:stretch}
+.dash .card+.card{margin-top:0}.dash-col{display:flex;flex-direction:column;gap:24px}
+.sched{position:relative;padding-left:24px}
+.sched::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--n100)}
+.sl{position:relative;padding:8px 0}.sl::before{content:"";position:absolute;left:-22px;top:14px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--n400)}
+.sl.past{color:var(--n500)}.sl.past::before{background:var(--n400)}.sl.next-e::before{border-color:var(--teal-a);background:var(--teal-a);box-shadow:0 0 0 4px var(--teal-bg)}
+.sl .tm{font-weight:500;display:inline-block;width:48px}
+.now{position:relative;display:flex;align-items:center;gap:8px;font:600 12px/16px Poppins;color:var(--teal-a);margin:0 0 0 -24px;padding:4px 0}.now::after{content:"";flex:1;height:2px;background:var(--teal-a);border-radius:1px}
+.gauge-w{display:flex;align-items:center;gap:24px}
+.lg-row{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--n700)}.lg-row i{width:8px;height:8px;border-radius:2px;flex:none}.lg-row b{display:block;font:600 14px/20px Poppins;color:var(--n900)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:120px;border-bottom:1px solid var(--n200);margin-top:8px}
+.bars button{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;min-width:0}.bars i{display:block;width:100%;max-width:16px;background:var(--teal-a);border-radius:4px 4px 0 0;transition:.12s}.bars button:hover i{background:var(--dark)}.bars button.tod i{background:var(--teal)}
+.bars-x{display:flex;gap:8px;font-size:12px;line-height:16px;color:var(--n500);margin-top:8px}.bars-x span{flex:1;text-align:center;min-width:0}
+.person{display:flex;align-items:center;gap:16px;padding:8px 0;border-bottom:1px solid var(--n100)}.person:last-child{border:0}.person .i{min-width:0;flex:1}
+.hbar{display:grid;grid-template-columns:120px 1fr 88px;gap:8px;align-items:center;padding:4px 0;font-size:12px;line-height:16px}.hbar .tr{height:8px;background:var(--n100);border-radius:4px;overflow:hidden}.hbar .tr i{display:block;height:100%;background:var(--teal-a);border-radius:0 4px 4px 0}
+.team-t td,.team-t th{padding:8px}.team-t tbody tr{cursor:pointer}.team-t tbody tr:hover td{background:var(--teal-bg)}.team-t th{font:400 12px/16px Poppins;color:var(--n500);text-transform:uppercase;text-align:left}.team-t{width:100%;border-collapse:collapse}.team-t .num{text-align:right}
+.load{display:flex;height:8px;width:96px;gap:2px;border-radius:4px;overflow:hidden;background:var(--n100)}.load i{display:block;height:100%}
+@keyframes fade{from{opacity:0}}@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.toast{--x:0}
+
+/* Doplnění po vizuální kontrole */
+.dash-g.fill{align-items:stretch}
+.dash-g.fill>.dash-col>.card:last-child{flex:1}
+.dash-pair{display:grid;gap:24px;flex:1}
+.recent-s{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.recent-i{display:flex;flex-direction:column;gap:4px;padding:16px;border-radius:8px;background:var(--n50);color:var(--n900);min-width:0}
+.recent-i:hover{background:var(--teal-bg);text-decoration:none}
+.recent-i .med{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.matrix{table-layout:fixed}.matrix th:first-child{width:192px}.matrix th:last-child{width:40px}
+.toast{bottom:64px}
+
+/* Přihlášení podle Figmy, sekce Přihlášení */
+.login{min-height:100vh;display:flex;align-items:center;padding:32px 120px;background:url(assets/img/login-pozadi.png) center/cover no-repeat fixed;position:relative}
+.login-card{width:480px;background:#fff;border-radius:12px;padding:40px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:16px}
+.lg-logo{width:107px;height:32px}.lg-logo svg{display:block}
+.lg-head{padding:8px 0}.lg-head h1{font:600 24px/32px Poppins}.lg-head p{color:var(--n700);margin-top:4px}
+.login-card .field label{text-transform:uppercase}
+.login-card .banner{margin:0}
+.pw{position:relative}.pw .inp{padding-right:48px}.pw button{position:absolute;right:16px;top:12px;color:var(--n500)}.pw button:hover{color:var(--teal-a)}
+.rt{text-align:right}.ct{text-align:center}
+.btn.wide{width:100%}
+.or{display:flex;align-items:center;gap:16px;font-size:12px;line-height:16px;color:var(--n500)}.or i{flex:1;height:1px;background:var(--n200)}
+.sso{display:flex;align-items:center;justify-content:center;gap:8px;height:40px;width:100%;border:1px solid var(--n200);border-radius:8px;background:#fff;color:var(--n900);transition:background .12s}.sso:hover{background:var(--n50);border-color:var(--teal)}
+.proto-who{position:absolute;right:32px;bottom:32px;display:flex;align-items:center;gap:8px;color:#fff;padding:8px 8px 8px 16px;border-radius:8px;background:rgba(19,26,28,.45)}
+
+
+/* Hlavička a boční menu 1:1 podle masterů Global Header a Sidebar */
+.header{padding:0 16px 0 32px}
+.logo{margin-right:0}
+.search{left:459px;transform:none;width:373px}
+.search .box{height:32px;padding:0 8px;background:var(--teal);color:var(--dark);gap:8px}
+.search .sib{width:32px;height:32px;display:grid;place-content:center}.search .sib svg{width:16px;height:16px}
+.search input{color:var(--dark);font-size:12px;line-height:16px}.search input::placeholder{color:var(--dark)}
+.search-res{top:40px}
+.head-actions{gap:4px}
+.head-btn{min-width:44px;height:44px;justify-content:center;gap:0}
+.head-btn .dot{top:4px;right:4px}
+.credits{padding-right:16px;font-size:12px;line-height:16px}.nib{width:44px;height:44px;display:grid;place-content:center;flex:none}
+.me{width:36px;height:36px;border-width:1px}
+.sidebar{width:242px;padding:32px 40px 32px 24px;display:flex;flex-direction:column;gap:24px}
+.nav{gap:8px;height:44px;padding:0;font-size:16px;line-height:24px;white-space:nowrap}
+.nav:hover{background:none;color:var(--teal);text-decoration:none}
+.navgroup{display:flex;flex-direction:column;gap:8px}
+.subnav{display:flex;flex-direction:column;gap:8px;padding-left:72px}
+.sub{padding:0;font-size:16px;line-height:24px}
+.sub:hover{background:none;color:var(--teal)}
+.sub.on{color:var(--teal);text-decoration:underline}
+.main{margin-left:242px}
+.toast{left:calc(50% + 121px)}
+
+
+/* Přehled: úkoly bez zaškrtávátka, To-do list */
+.task-link{cursor:pointer;border-radius:8px}.task-link:hover .t{color:var(--teal-a)}
+.todo{display:flex;align-items:center;gap:16px;padding:4px 0}
+.todo.done span{color:var(--n500);text-decoration:line-through}
+.td-del{color:var(--n500);font-size:16px;opacity:0;width:24px;height:24px}.todo:hover .td-del,.td-del:focus-visible{opacity:1}
+.dash .recent-s{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+
+/* Posuvníky: tenké, ve stylu systému, stránka se posouvá pod hlavičkou */
+*{scrollbar-width:thin;scrollbar-color:#c5d0d3 transparent}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#c5d0d3;border-radius:4px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--n500);border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-corner{background:transparent}
+.tabs,.tbl-card{scrollbar-width:none}.tabs::-webkit-scrollbar,.tbl-card::-webkit-scrollbar{display:none}
+body.in-app{overflow:hidden}
+.main{height:calc(100vh - 64px);min-height:0;overflow-y:auto;overflow-x:hidden}
+.bulk{top:8px}
+
+/* Boční menu V2 */
+.sidebar{width:242px;padding:16px 0 8px;gap:0;overflow:hidden;display:flex;flex-direction:column}
+.nav{height:40px;padding:0 8px 0 0;margin:0 8px;border-radius:8px;gap:4px;width:calc(100% - 16px);text-align:left;color:#fff;font:400 14px/20px Poppins;white-space:nowrap}
+.nav .nib{width:40px;height:40px}
+.nav .nib svg{transform:scale(.85)}
+.nav:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav.on{color:var(--teal);background:rgba(255,255,255,.08)}
+.navgroup{gap:0}
+.subnav{gap:0;padding:0 8px 4px 52px}
+.sub{font-size:14px;line-height:20px;padding:6px 8px;border-radius:8px}
+.sub:hover{background:rgba(255,255,255,.08);color:#fff}
+.sub.on{text-decoration:none;font-weight:500}
+.ntop,.nbot{flex:none}
+.nbot{border-top:1px solid rgba(255,255,255,.14);padding-top:8px;margin-top:8px}
+.nmid{position:relative;flex:1;min-height:0;margin-top:8px}
+.nscroll{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-color:transparent transparent;padding-bottom:8px}
+.nscroll:hover{scrollbar-color:rgba(255,255,255,.3) transparent}
+.nscroll::-webkit-scrollbar{width:6px}
+.nscroll::-webkit-scrollbar-thumb{background:transparent;border:0}
+.nscroll:hover::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border:0}
+.ngroup{margin-bottom:8px}
+.nhead{display:flex;align-items:center;justify-content:space-between;width:calc(100% - 16px);height:32px;margin:0 8px;padding:0 8px;border-radius:8px;color:rgba(255,255,255,.72);font:500 12px/16px Poppins;text-transform:uppercase;letter-spacing:.02em}
+.nhead:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nhead svg{width:12px;height:8px}
+.nmid::before,.nmid::after{content:"";position:absolute;left:0;right:0;height:40px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1}
+.nmid::before{top:0;background:linear-gradient(var(--dark),rgba(34,79,93,0))}
+.nmid::after{bottom:0;background:linear-gradient(rgba(34,79,93,0),var(--dark))}
+.nmid.prev::before,.nmid.hasmore::after{opacity:1}
+.nmore{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:32px;height:24px;border-radius:8px;display:none;place-content:center;color:#fff;z-index:2}
+.nmore svg{width:14px;height:8px}
+.nmore:hover{background:rgba(255,255,255,.12)}
+.nmid.hasmore .nmore{display:grid}
+.ncollapse{color:rgba(255,255,255,.72)}
+.ncollapse .nib svg{width:7px;height:12px;transform:none}
+body.rail .sidebar{width:72px}
+body.rail .main{margin-left:72px}
+body.rail .lbl{display:none}
+body.rail .nav{width:40px;margin:0 16px;padding:0;gap:0}
+body.rail .nsep{border:0;border-top:1px solid rgba(255,255,255,.14);margin:8px 16px}
+body.rail .ngroup{margin:0}
+body.rail .toast{left:calc(50% + 36px)}
+.main{margin-left:242px}
+
+
+/* Záložky podle Figmy: posun do boku, přechod a šipka jen tam, kde jsou další */
+.tabbar{position:relative;min-width:0}
+.tabs{display:flex;gap:24px;height:44px;border-bottom:1px solid var(--n100);margin-bottom:24px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;user-select:none;scroll-behavior:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tabs.drag{cursor:grabbing}.tabs.drag .tab{pointer-events:none}
+.tab{flex:none;display:flex;align-items:center;height:44px;padding:0 24px;margin:0;color:var(--gray);font:500 14px/20px Poppins;border-bottom:2px solid transparent}
+.tab:hover{color:var(--n900)}
+.tab.on{color:var(--teal-a);border-bottom-color:var(--teal-a)}
+.tab-ov{position:absolute;top:0;width:48px;height:43px;display:none;align-items:center;color:var(--n700);z-index:2}
+.tab-ov svg{width:5px;height:9px}
+.tab-ov:hover{color:var(--n900)}
+.tab-ov.to-r{right:0;justify-content:flex-end;padding-right:16px;background:linear-gradient(90deg,rgba(241,249,250,0),var(--n50) 20%)}
+.tab-ov.to-l{left:0;justify-content:flex-start;padding-left:16px;background:linear-gradient(270deg,rgba(241,249,250,0),var(--n50) 20%)}
+.tabbar.r .tab-ov.to-r,.tabbar.l .tab-ov.to-l{display:flex}
+.tbl-card{scrollbar-width:thin}.tbl-card::-webkit-scrollbar{display:block;height:8px}
+
+
+/* Malá šipka řazení v záhlaví tabulek */
+.tbl th.sort .ic{width:12px;height:6px;margin-left:4px;vertical-align:middle}
+.tbl th.sort .ic svg{display:block;width:12px;height:6px}
+.tbl th .more .ic{width:16px;height:16px}
+.sort-by{text-transform:none;color:var(--n500)}
+
+/* Oprava: lišta stránkování se nesmí smrsknout, menu v písmu Menu/16/24 */
+.main>.wrap{flex:1 0 auto}
+.foot{flex:none}
+.nav{font:400 16px/24px Poppins}
+.nav .nib svg{transform:none}
+.sub{font-size:16px;line-height:24px;padding:4px 8px}
+
+
+/* Úkoly: výběr pro hromadné akce, více řešitelů */
+.task.picked{background:var(--teal-bg);margin:0 -24px;padding-left:24px;padding-right:24px}
+.av-more{display:inline-grid;place-content:center;min-width:24px;height:24px;padding:0 4px;border-radius:12px;background:var(--n100);color:var(--n700);font:600 10px/16px Poppins;vertical-align:middle}
+.co-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 16px}
+
+/* Přehled: obrázek z přihlášení, vlevo ztmavený kvůli čitelnosti textu */
+.hero{background:linear-gradient(90deg,rgba(34,79,93,.82) 0%,rgba(34,79,93,.5) 42%,rgba(34,79,93,.08) 72%),url(assets/img/login-pozadi.png) center 62%/cover no-repeat}
+.hero{background:linear-gradient(90deg,rgba(34,79,93,.5) 0%,rgba(34,79,93,.22) 45%,rgba(34,79,93,0) 70%),url(assets/img/login-pozadi.png) center 28%/cover no-repeat}
+
+
+/* Přehled: řádek nad pruhem a mřížka karet s úpravou rozložení */
+.dash-top{display:flex;align-items:center;justify-content:space-between;min-height:32px;margin-bottom:-8px}
+.dash-date{gap:16px;color:var(--n700)}
+.hero>div:first-child{align-self:center}
+.hero .tools{margin-top:16px}
+.dgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:stretch}
+.dcell{position:relative;min-width:0;display:flex;flex-direction:column}
+.dcell>.card{flex:1;margin:0}
+.w1{grid-column:span 1}.w2{grid-column:span 2}.w3{grid-column:span 3}
+.dcell.edit{cursor:grab;border-radius:8px;outline:2px dashed var(--teal);outline-offset:2px}
+.dcell.edit>.card{pointer-events:none;user-select:none}
+.dcell.dragging{opacity:.4}
+.dcell.dropb{box-shadow:-6px 0 0 var(--teal-a)}.dcell.dropa{box-shadow:6px 0 0 var(--teal-a)}
+.dctl{position:absolute;top:-16px;right:16px;display:flex;align-items:center;gap:4px;padding:4px;background:#fff;border-radius:8px;box-shadow:var(--shadow);cursor:default;z-index:2}
+.dctl>button{width:24px;height:24px;display:grid;place-content:center;border-radius:4px;color:var(--n700);font-size:16px}
+.dctl>button svg{width:5px;height:9px}
+.dctl>button:hover:not([disabled]){background:var(--n100)}.dctl>button[disabled]{opacity:.3;cursor:default}
+.seg-w{display:inline-flex;padding:2px;border-radius:6px;background:var(--n100)}
+.seg-w button{height:20px;padding:0 4px;border-radius:4px;font-size:12px;line-height:16px;color:var(--n700)}
+.seg-w button.on{background:#fff;color:var(--teal-a);font-weight:500}
+/* Tinty dlaždic podle tokenů */
+:root{--red-bg:#fadedb;--amber-bg:#fef3c7;--green-bg:#dcfce7;--violet-bg:#ede9fe}
+.kpi .ring[style*="teal-bg"]{background:#ccfbf1!important}
+
+
+/* Pozadí Přehledu podle Figmy: obrázek y = -222 z 638 px */
+.hero{background:linear-gradient(90deg,rgba(34,79,93,.5) 0%,rgba(34,79,93,.22) 45%,rgba(34,79,93,0) 70%),url(assets/img/login-pozadi.png) center 61.3%/cover no-repeat}
+.dash-date{flex-wrap:wrap}
+/* Stav v seznamu: změna kliknutím */
+.st-btn{display:inline-flex;align-items:center;gap:8px;padding:4px 8px;margin-left:-8px;border-radius:8px}
+.st-btn svg{width:10px;height:6px;opacity:0;color:var(--n500)}
+.st-btn:hover,.st-btn:focus-visible{background:rgba(19,26,28,.06)}.st-btn:hover svg,.st-btn:focus-visible svg{opacity:1}
+/* Ukotvený sloupec */
+.tbl.frozen th:first-child,.tbl.frozen td:first-child{position:sticky;left:0;width:56px;min-width:56px;max-width:56px;z-index:2}
+.tbl.frozen th:nth-child(2),.tbl.frozen td:nth-child(2){position:sticky;left:56px;z-index:2}
+.tbl.frozen1 th:first-child,.tbl.frozen1 td:first-child{position:sticky;left:0;z-index:2}
+.tbl-card.scrolled .tbl.frozen th:nth-child(2),.tbl-card.scrolled .tbl.frozen td:nth-child(2),.tbl-card.scrolled .tbl.frozen1 th:first-child,.tbl-card.scrolled .tbl.frozen1 td:first-child{box-shadow:4px 0 8px -4px rgba(0,0,0,.16)}
+.filters{grid-template-columns:repeat(5,minmax(0,1fr)) auto}
+/* Nastavení */
+.set-row{justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--n100);cursor:pointer}.set-row:last-child{border:0}
+.sel-sm{height:32px;padding:0 8px;font-size:12px;min-width:120px}
+
+
+/* Kalendář */
+.cal-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.cal-label{font:600 16px/24px Poppins;margin-left:8px}
+.cal-type{gap:8px;font-size:12px;line-height:16px;margin-left:8px;cursor:pointer}
+.cb-s{width:16px;height:16px;border-radius:4px}.cb-s:checked::after{width:8px;height:4px}
+.seg-l{background:var(--n100)}.seg-l button{color:var(--n700)}.seg-l button.on{background:#fff;color:var(--teal-a);font-weight:500}
+.cal-m{background:#fff;border-radius:8px;overflow:hidden}
+.mhead{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));font-size:12px;line-height:16px;color:var(--n700);text-transform:uppercase}
+.mhead>div{padding:8px}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--n100)}
+.mday{min-height:112px;padding:4px;border-right:1px solid var(--n100);border-bottom:1px solid var(--n100);display:flex;flex-direction:column;gap:2px;cursor:pointer;min-width:0}
+.mday:nth-child(7n){border-right:0}
+.mday:hover{background:var(--n50)}.mday.we{background:#fafbfb}.mday.out .mn,.mday.out .mname{opacity:.45}
+.mh{display:flex;align-items:center;gap:4px;height:24px;padding:0 4px}
+.mn{font-size:12px;line-height:16px;font-weight:500;flex:none}
+.today .mn{display:inline-grid;place-content:center;width:24px;height:24px;margin-left:-4px;border-radius:50%;background:var(--teal-a);color:#fff}
+.mname{flex:1;min-width:0;font-size:12px;line-height:16px;color:var(--n500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.madd{width:16px;height:16px;display:grid;place-content:center;opacity:0;color:var(--teal-a);flex:none}.madd svg{width:10px;height:10px}
+.mday:hover .madd,.madd:focus-visible{opacity:1}
+.ev{display:flex;align-items:center;gap:4px;width:100%;min-height:20px;padding:2px 4px;border-radius:4px;background:var(--teal-bg);color:var(--dark);font-size:12px;line-height:16px;text-align:left;min-width:0;cursor:pointer}
+.ev:hover{background:#cfe9eb;text-decoration:none}
+.ev svg{width:12px;height:12px;flex:none}
+.ev-t{flex:none;font-weight:500}.ev-n{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-past{background:var(--n100);color:var(--n500)}.ev-no{background:var(--red-bg);color:var(--red)}.ev-no .ev-n{text-decoration:line-through}
+.ev-task{background:transparent;color:var(--n700);box-shadow:inset 0 0 0 1px var(--n200)}.ev-late{color:var(--red);box-shadow:inset 0 0 0 1px var(--red-bg)}
+.ev-bd{background:var(--amber-bg);color:var(--amber)}
+.ev-more{font-size:12px;line-height:16px;color:var(--teal-a);text-align:left;padding:0 4px}
+.drop-on{background:var(--teal-bg)!important;box-shadow:inset 0 0 0 2px var(--teal-a)}
+.cal-w{padding:0;overflow:hidden}
+.whead{display:grid;border-bottom:1px solid var(--n100)}
+.wday{display:flex;flex-direction:column;align-items:center;padding:8px 0;font-size:12px;line-height:16px;color:var(--n700)}.wday b{font:600 16px/24px Poppins;color:var(--n900);width:32px;height:32px;display:grid;place-content:center;border-radius:50%}.wday.today b{background:var(--teal-a);color:#fff}.wday:hover b{background:var(--n100)}.wday.today:hover b{background:var(--dark)}
+.wtopc{padding:4px;display:flex;flex-direction:column;gap:2px;border-left:1px solid var(--n100);min-width:0;text-align:center}
+.wbody{display:grid}
+.whours>div{font-size:12px;line-height:16px;color:var(--n500);text-align:right;padding-right:8px;transform:translateY(-8px)}
+.whours{padding-top:8px}
+.wcol{position:relative;border-left:1px solid var(--n100);min-width:0;margin-top:8px}.wcol.today{background:#fafdfd}
+.wslot{display:block;width:100%;border-top:1px solid var(--n100)}.wslot:hover{background:var(--n50)}
+.ev-b{position:absolute;display:flex;flex-direction:column;align-items:flex-start;gap:0;min-height:0;overflow:hidden;z-index:1;box-shadow:inset 3px 0 0 var(--teal-a);padding-left:8px;width:auto}
+.ev-b.ev-past{box-shadow:inset 3px 0 0 var(--n400)}.ev-b.ev-no{box-shadow:inset 3px 0 0 var(--red)}
+.ev-b .ev-t{font-weight:400}.ev-b .ev-n{font-weight:500;width:100%}
+.wnow{position:absolute;left:0;right:0;height:2px;background:var(--teal-a);z-index:2;pointer-events:none}.wnow::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--teal-a)}
+.lg-l{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}
+.lg-i{display:flex;gap:8px;color:var(--n900)}.lg-i:hover{color:var(--teal-a);text-decoration:none}.lg-d{color:var(--n500);width:48px;flex:none}.now-i{font-weight:600}
+.sl-b{cursor:pointer;border-radius:8px}.sl-b:hover{background:var(--n50)}
+
+.ev-b .ev-n,.ev-b .ev-t{flex:none;white-space:nowrap}
+.ev-b .ev-n{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ev-b.ev-s .ev-t{display:none}
+.ev-b.ev-s{justify-content:center}
+
+
+/* Sdílení ve sloupci Správce */
+.av-stack{display:inline-flex}.av-stack .av+.av{margin-left:-8px;box-shadow:0 0 0 2px #fff;background:var(--teal-a)}
+tr:nth-child(even) .av-stack .av+.av{box-shadow:0 0 0 2px #f7f7f7}
+/* Obchod */
+.kanban{display:grid;gap:16px;overflow-x:auto;align-items:start;padding-bottom:8px}
+.kcol{background:#fff;border-radius:8px;padding:8px;min-height:320px;display:flex;flex-direction:column;gap:8px}
+.kh{display:flex;align-items:center;gap:8px;padding:8px;font-size:14px}.kh b{font-weight:600}
+.dcard{background:var(--n50);border-radius:8px;padding:8px 8px 8px 16px;cursor:grab;display:flex;flex-direction:column;gap:4px;transition:box-shadow .12s}
+.dcard:hover{box-shadow:var(--shadow)}.dcard.dragging{opacity:.4}
+.dc-v b{font:600 14px/20px Poppins}.dc-b .av+.av{margin-left:-8px}
+.kdrop{position:sticky;bottom:8px;display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;opacity:0;pointer-events:none;transition:opacity .12s;z-index:3}
+.kdrop.on{opacity:1;pointer-events:auto}
+.kz{display:flex;align-items:center;justify-content:center;gap:8px;height:64px;border-radius:8px;font-weight:500;background:#fff;box-shadow:var(--shadow)}
+.kz-won{color:var(--green)}.kz-lost{color:var(--red)}
+.tl-l{cursor:pointer}.tl-l:hover .sb{color:var(--teal-a)}
+
+
+/* Dokumenty */
+.sel-m{width:232px;height:32px;font-size:12px;padding:0 8px}
+.doc-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.doc-grid-s{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:8px}
+.doc-c{background:#fff;border-radius:8px;overflow:hidden;cursor:pointer;transition:box-shadow .12s}
+.group .doc-c,.card .doc-c{box-shadow:inset 0 0 0 1px var(--n100)}
+.doc-c:hover{box-shadow:var(--shadow)}
+.doc-b{padding:16px}
+.doc-t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.dthumb{position:relative;height:120px;background:var(--n100);padding:16px 40px 0;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.dthumb::before{content:"";position:absolute;left:32px;right:32px;top:16px;bottom:-8px;background:#fff;border-radius:4px 4px 0 0;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.dthumb i{position:relative;display:block;height:4px;background:var(--n200);border-radius:2px;margin:0 8px}.dthumb i:first-of-type{margin-top:16px}.dthumb i.s{margin-right:40%}
+.dthumb.blur i{filter:blur(2px)}
+.dt-img{position:relative;color:var(--n400);display:grid;place-content:center;height:88px}
+.dt-f{position:absolute;right:8px;bottom:8px;padding:0 4px;border-radius:4px;background:var(--dark);color:#fff;font:600 10px/16px Poppins}
+.doc-v{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:16px;align-items:start}
+.doc-page{background:var(--n100);border-radius:8px;padding:32px;min-height:640px;display:flex;justify-content:center;align-items:flex-start}
+.sheet{width:100%;max-width:520px;min-height:576px;background:#fff;padding:40px;box-shadow:0 1px 8px rgba(0,0,0,.1)}
+.sheet i{display:block;height:8px;background:var(--n100);border-radius:2px;margin-bottom:8px}.sheet i.s{margin-right:40%}
+.doc-lock{align-self:center;display:flex;flex-direction:column;align-items:center;gap:16px;color:var(--n500)}
+.doc-side .card+.card{margin-top:16px}
+.doc-rel{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--n100);cursor:pointer;min-width:0}.doc-rel:last-child{border:0}
+.doc-rel .dthumb,.doc-pick .dthumb{width:48px;height:56px;padding:0;flex:none;border-radius:4px}.doc-rel .dthumb::before,.doc-pick .dthumb::before{left:6px;right:6px;top:6px}.doc-rel .dthumb i,.doc-pick .dthumb i{display:none}.doc-rel .dt-f,.doc-pick .dt-f{right:2px;bottom:2px;font-size:8px;line-height:12px}.doc-rel .dt-img,.doc-pick .dt-img{display:none}
+.doc-pick{display:flex;align-items:center;gap:16px;width:100%;padding:8px;border-radius:8px;text-align:left}.doc-pick:hover{background:var(--n50)}
+.doc-drop{display:flex;align-items:center;gap:16px;padding:16px;border:2px dashed var(--n200);border-radius:8px;cursor:pointer;color:var(--n700)}.doc-drop:hover,.doc-drop.on{border-color:var(--teal);background:var(--n50)}
+
+select.inp.sel-m{width:232px;height:32px}
+
+
+/* Přehled: klidnější karta a úkoly */
+.next{display:flex;flex-direction:column;min-height:180px}
+.next-l{font-size:12px;line-height:16px;color:var(--n500);margin-bottom:8px}
+.next h3{margin-bottom:4px}
+.next-m{font-size:14px;line-height:20px;color:var(--n700)}
+.next .acts{margin-top:auto;align-items:center;gap:16px}
+.next-link{font-size:12px;line-height:16px}
+.tm-r{display:flex;align-items:center;gap:16px;padding:8px;margin:0 -8px;border-radius:8px;cursor:pointer}
+.tm-r:hover{background:var(--n50)}
+.tm-r .body{flex:1;min-width:0}
+.tm-r .t{display:block;font:500 14px/20px Poppins;color:var(--n900)}
+.tm-r:hover .t{color:var(--teal-a);text-decoration:none}
+/* Barevný akcent */
+.card-accent{background:var(--dark);color:#fff;--g1:#fff;--g2:var(--teal);--g3:rgba(255,255,255,.18)}
+.card-accent h2,.card-accent .lg-row,.card-accent .lg-row b,.card-accent .small{color:#fff}
+.card-accent button{color:#fff}
+/* Režim úprav: živé přesouvání */
+.dcell.edit{transition:opacity .12s}
+.dcell.dragging{opacity:.35}
+.dcell.dragging .dctl{visibility:hidden}
+/* Narozeniny a svátky */
+.cel-t{width:100%;border-collapse:collapse}
+.cel-t td{padding:8px;border-top:1px solid var(--n100);white-space:nowrap}
+.cel-t tr.cel-off td:not(:first-child){opacity:.5}
+.bulk-off{opacity:.6}
+.cel-t{table-layout:fixed}
+
+
+/* Menu: vybraná položka jen barvou, bez pole */
+.nav.on,.nav:hover,.sub:hover{background:none}
+.nav:hover,.sub:hover{color:var(--teal)}
+/* Značková růžová: oslavy, aktuální čas a nepřečtené notifikace. Ne pro stavy, červená zůstává rizikem. */
+:root{--pink:#e94970;--pink-bg:#fde9ee;--pink-d:#b3264b}
+.pk{color:var(--cel);display:inline-flex}
+.dot{background:var(--pink)}
+.now{color:var(--pink-d)}.now::after{background:var(--pink)}
+.wnow,.wnow::before{background:var(--pink)}
+.ev-bd{background:var(--cel-bg);color:var(--cel)}.ev-bd:hover{background:#f5d0fe}
+.kpi .ring .ic{color:inherit}
+
+
+/* ===== Typografická stupnice: platí v celém systému =====
+   36/44 600  pozdrav na Přehledu
+   24/32 600  nadpis stránky, velké číslo v dlaždici
+   16/24 600  nadpis karty a okna; 16/24 400 položka menu
+   14/20 400  běžný text a pole; 500 názvy v řádcích a záložky; 600 podnadpis v kartě, částka
+   12/16 400  popisky, metadata, tlačítka; 600 štítky a nadpisy skupin
+   Výjimka: iniciály v avataru a počet v odznaku zvonku. */
+b{font-weight:600}
+.sec-t{font:600 14px/20px Poppins}
+.card>.sec-t:first-child{font:600 16px/24px Poppins}
+.g-h{font:600 14px/20px Poppins}
+.g-h em{font:400 12px/16px Poppins}
+.task .t,.tm-r .t{font:500 14px/20px Poppins}
+.stat b,.tile-t b{font:600 24px/32px Poppins}
+.badge{font:600 12px/16px Poppins}
+.av-more{font:600 12px/16px Poppins}
+.d{font:600 12px/16px Poppins}
+.dt-f,.doc-rel .dt-f,.doc-pick .dt-f{font:600 12px/16px Poppins}
+.sub.on{font-weight:400}
+.sub,.nav{font-weight:400}
+.nhead{font:600 12px/16px Poppins}
+.search input{font-size:14px;line-height:20px}
+input.inp,select.inp,textarea.inp{font-size:14px;line-height:20px}
+.sel-sm,select.inp.sel-m{font-size:14px}
+.sel-sm{min-width:136px}
+/* Nepřečtené notifikace v barvě odznaku */
+.noti .d{background:var(--pink);width:8px;height:8px;display:block}
+
+/* Dnešní rozvrh: tečka na ose čáry a na výšce prvního řádku */
+.sched::before{left:7px;width:2px;top:8px;bottom:8px}
+.sl::before{left:-22px;top:12px;width:12px;height:12px;z-index:1}
+.sl:last-child::after{content:"";position:absolute;left:-18px;width:4px;top:18px;bottom:-9px;background:#fff}
+.sl-b:hover:last-child::after{background:#fff}
+.now{background:#fff;position:relative;z-index:1}
+.sl .tm{vertical-align:top}
+/* Dvanáctka má jen Regular a SemiBold */
+.seg button.on,.seg-w button.on,.mn,.ev-t,.ev-b .ev-n,.kz{font-weight:600}
+.seg-l button.on{font-weight:600}
+
+/* Karta Teď je na řadě je celá klikací */
+.next-c{cursor:pointer;transition:box-shadow .12s}
+.next-c:hover{box-shadow:0 8px 24px rgba(0,0,0,.18)}.next-c:hover h3{color:var(--teal-a)}
+.next-go{position:absolute;top:24px;right:24px;color:var(--n500);display:flex}.next-go svg{width:7px;height:12px}
+.next h3{padding-right:24px}
+.nhead.on{color:var(--teal)}
+.rate{font-weight:600}
+
+/* Pseudoprvky nedědí border-box z *: tečka měla 16 px místo 12 a seděla mimo osu */
+.sl::before{box-sizing:border-box}
+.sched::before{top:18px}
+/* Nepřečtené notifikace: jemně růžové pozadí k růžové tečce */
+.noti.un{background:var(--pink-bg)}
+.noti.un:hover{background:#fbdce4}
+.noti.un .mute{color:var(--n700)}
+.noti+.noti{margin-top:4px}
+/* Karta Teď je na řadě nadskočí stejně jako dlaždice pod ní */
+.next-c{transition:transform .12s}
+.next-c:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.btn-x{width:32px;padding:0;flex:none}
+
+/* Položka s podnabídkou jen rozbaluje */
+.nav .nch{margin-left:auto;display:flex;align-items:center;padding-right:8px}
+/* Nadpis seznamu: ikona na ose prvního sloupce tabulky */
+.page-head.list-h{padding-left:16px}
+/* Hodnocení na střed sloupce */
+.tbl th.ctr,.tbl td.ctr{text-align:center}
+.nav .nch{padding-right:0}.nav .nch svg{width:12px;height:6px;display:block}
+
+/* Nadpis stránky: všude stejná výška a stejné odsazení zleva */
+.page-head,.ent-head{padding-left:16px}
+.ent-head{align-items:flex-start;gap:8px}
+.ent-head>.av,.ent-head>img.av{margin-right:16px;flex:none}
+.ent-head h1{margin-top:4px}
+.ent-head>.btn,.ent-head>.more{margin-top:4px}
+.summary{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto auto;gap:24px;align-items:start;margin-bottom:16px;max-height:160px;overflow:hidden;transition:max-height .2s,padding .2s,margin .2s,opacity .2s}
+.summary .val{overflow-wrap:anywhere}
+.av.logo{border-radius:50%;background:#fff;object-fit:contain;padding:12px;box-shadow:inset 0 0 0 1px var(--n100)}
+/* Správci a štítky */
+.who-btn,.tag-btn{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;color:inherit;font:inherit;border-radius:8px}
+.who-btn:hover span:not(.av):not(.av-more),.tag-btn:hover .chip{color:var(--teal-a)}
+.own-r{display:flex;align-items:center;gap:8px;padding:8px;margin:0 -8px;border-radius:8px;color:inherit}
+.own-r:hover{background:var(--n50);text-decoration:none}
+.own-b{display:flex;flex-direction:column;flex:1;min-width:0}
+.own-ft{margin-top:8px;padding-top:8px;border-top:1px solid var(--n100)}
+.own-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:240px;overflow:auto}
+/* Fotografie nebo logo v editaci */
+.ph-edit{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.ph-edit #ph-prev{margin-right:16px;display:flex}
+
+/* Přilepené prvky počítají s odsazením .main: nad a pod nimi nesmí prosvítat obsah */
+.form-foot{bottom:-48px;margin:24px -32px -32px;padding:16px 32px;z-index:4}
+.summary{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto auto}
+
+/* Teď je na řadě: důvod a „Pak“ */
+.next-why{font-size:12px;line-height:16px;color:var(--n500);margin-top:8px}
+.next-then{display:flex;align-items:baseline;gap:8px;width:calc(100% + 48px);margin:16px -24px -24px;padding:16px 24px;border:0;border-top:1px solid var(--n100);border-radius:0 0 8px 8px;background:none;font:400 12px/16px Poppins;color:var(--n500);text-align:left;cursor:pointer}
+.next-then b{font-weight:500;color:var(--n900);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.next-then em{font-style:normal;margin-left:auto;white-space:nowrap}
+.next-then:hover b{color:var(--teal-a)}
+.next .teal-t{color:var(--teal-a);font-weight:500}
+/* Prototyp: přepínač času */
+.proto-now{display:inline-flex;align-items:center;gap:8px;padding:0 4px 0 8px;height:32px;border:1px dashed var(--n400);border-radius:8px;font-size:12px;color:var(--n500)}
+.proto-now input{font:500 14px/20px Poppins;color:var(--n900);border:0;background:none;padding:0}
+.proto-now button{display:flex;border:0;background:none;color:var(--n500);cursor:pointer;padding:4px}
+.next .acts{padding-top:16px}
+a.btn:hover,.next-then:hover{text-decoration:none}
+.dash-top{padding:0 32px}
+
+/* Typy aktivit: každý má svou barvu (časová osa, kategorie úkolu) */
+.k-call{--kf:#1d4ed8;--kb:#e0eaff}.k-mail{--kf:#1f6e77;--kb:#e3f4f5}.k-meet{--kf:#6d28d9;--kb:#efe7fd}.k-note{--kf:#7a4f2a;--kb:#f4ece2}.k-task{--kf:#224f5d;--kb:#e4edef}.k-doc{--kf:#3b5b7a;--kb:#e3ebf3}.k-sys{--kf:#4b5563;--kb:#f3f3f3}
+.badge[class*="k-"]{background:var(--kb);color:var(--kf)}
+.tl .i[class*="k-"]{background:var(--kf);color:#fff}
+/* Detail kontaktu: víc vzduchu mezi údaji, sekcemi a záznamy */
+.grid:has(>.field>.lab){row-gap:24px;column-gap:24px}
+hr.sep{margin:32px 0}
+.ent-meta{gap:16px}
+.tl{padding:24px 0}
+.tl-g{margin-top:24px}.tl-g:first-of-type{margin-top:8px}
+.tl-h{gap:8px}
+.tl-t{margin-top:8px}
+.tl-x{margin-top:4px}
+.task .body>.badge{margin-bottom:4px}
+/* Adresa s mapou */
+.addr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+.map{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.map iframe{display:block;width:100%;height:224px;border:0;border-radius:8px;background:var(--n100)}
+/* Propojené kontakty: vždy klikatelné */
+.links{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.link-r{display:flex;align-items:center;gap:16px;padding:8px;margin:0 -8px;border-radius:8px;color:inherit}
+a.link-r:hover{background:var(--n50);text-decoration:none}a.link-r:hover .med{color:var(--teal-a)}
+.link-r>svg{margin-left:auto;color:var(--n400);flex:none}
+.link-b{display:flex;flex-direction:column;min-width:0}
+.av.org{background:var(--n100);color:var(--n700)}
+.pop .links{margin-top:8px}
+.av.a32.logo,.av.a40.logo{padding:4px}
+.grid:has(>.field>.lab){align-content:start}
+.link-r{width:calc(100% + 16px);max-width:480px;box-sizing:border-box}
+.link-r>.ic:last-child{margin-left:auto;color:var(--n400)}a.link-r:hover>.ic:last-child{color:var(--teal-a)}
+.act-ic[class*="k-"]{background:var(--kf);color:#fff}
+
+/* Profil uživatele */
+.u-sum{grid-template-columns:minmax(0,1.4fr) repeat(5,minmax(0,1fr))}
+.u-top{margin-bottom:16px;align-items:stretch}.u-top>.card{margin:0}
+.today-s{display:flex;align-items:center;gap:8px;margin-bottom:16px}.today-s b{font:600 16px/24px Poppins}
+.today-r{display:flex;align-items:center;gap:8px;color:var(--n700);padding:4px 0}.today-r .ic{color:var(--n500)}
+.today-sub{margin-top:16px;padding-top:16px;border-top:1px solid var(--n100)}
+.team-g+.team-g{margin-top:16px}.team-g .lab{margin-bottom:0}
+button.u-tile{text-align:left;width:100%;border:0;cursor:pointer;font:inherit;color:inherit}button.u-tile:hover{box-shadow:inset 0 0 0 1px var(--teal);}
+.card .u-tile{background:var(--n50)}
+.certs{margin-top:24px;display:flex;flex-direction:column}
+.cert{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--n100)}.cert>.ic{color:var(--teal-a)}
+.cert-ed{display:flex;flex-direction:column;gap:8px}.cert-ed .row{gap:8px}.cert-ed .inp:first-child{flex:1}
+.badge-c{display:flex;align-items:center;gap:16px;padding:16px;border-radius:8px;background:var(--n50)}.badge-c.off{opacity:.6}
+.locked{position:relative;display:flex;flex-direction:column;gap:16px;padding:8px 0}
+.locked i{display:block;height:16px;border-radius:4px;background:var(--n100);filter:blur(2px)}.locked i:nth-child(2n){width:70%}.locked i:nth-child(3n){width:45%}
+.locked>span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--n500);font-size:12px;line-height:16px}
+table.perm{width:100%;border-collapse:collapse}table.perm th{font:400 12px/16px Poppins;color:var(--n500);text-align:left;padding:8px 16px 8px 0;border-bottom:1px solid var(--n100)}
+table.perm td{padding:16px 16px 16px 0;border-bottom:1px solid var(--n100)}table.perm tr:last-child td{border:0}
+.summary.u-sum{display:flex;gap:48px;flex-wrap:wrap;max-height:none}.u-sum .val{overflow-wrap:normal;white-space:nowrap}
+
+/* Detail kontaktu: shrnutí se 7 údaji, propojené kontakty, oddělený vztah */
+.summary{grid-template-columns:minmax(0,1.5fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr) auto auto}
+.summary .plain{color:inherit}.summary .plain:hover{text-decoration:none;color:var(--teal-a)}
+.lk-one{display:flex;flex-direction:column;align-items:flex-start;min-width:0;text-align:left}.lk-one>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
+.link-btn:hover .lk-one>span:first-child{color:var(--teal-a)}
+.sep-dot::before{content:"·";margin-right:16px;color:var(--n400)}
+.sens-lock{display:inline-flex;color:var(--n400);margin-left:8px}
+.info-tip{display:inline-flex;vertical-align:-3px;margin-left:4px;color:var(--n400);cursor:help}.info-tip .ic{width:14px;height:14px}
+/* Adresy jako záložky */
+.sub-tabs{display:flex;gap:24px;border-bottom:1px solid var(--n100);margin-bottom:24px}
+.sub-tab{padding:8px 0;margin-bottom:-1px;border:0;border-bottom:2px solid transparent;background:none;font:500 14px/20px Poppins;color:var(--n700);cursor:pointer}
+.sub-tab:hover{color:var(--n900)}.sub-tab.on{color:var(--teal-a);border-bottom-color:var(--teal-a)}
+/* Časová osa: naplánované, klikatelné záznamy, načíst starší */
+.tl-tog{display:inline-flex;align-items:center;gap:8px;border:0;background:none;padding:8px 0;font:500 14px/20px Poppins;color:var(--teal-a);cursor:pointer}
+.tl-plan{border-radius:8px;background:var(--n50);padding:0 16px;margin:8px 0 16px}
+.tl-plan .tl{border-color:#fff}
+a.tl,button.tl{width:100%;text-align:left;border-left:0;border-right:0;border-top:0;background:none;font:inherit;color:inherit;cursor:pointer}a.tl:hover{text-decoration:none}
+.tl-l{cursor:pointer;border-radius:8px;transition:background .15s}.tl-l:hover{background:var(--n50)}.tl-plan .tl-l:hover{background:#fff}
+.card>.tl-l{margin:0 -16px;padding-left:16px;padding-right:16px}
+.tl-more{margin-top:16px}
+/* Záložky: posun jen šipkami */
+.tabs{overflow-x:hidden}
+.summary{grid-template-columns:minmax(0,1.4fr) auto auto auto minmax(0,1.2fr) auto auto}.summary .small{white-space:nowrap}
+.summary{grid-template-columns:minmax(0,1.5fr) minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr) auto auto}
+.summary .val{display:block}.summary .val>.who-btn,.summary .val>.tag-btn{display:inline-flex}.summary .lab{white-space:nowrap}
+.summary .small{margin-top:2px}
+.summary{grid-template-columns:minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr) auto auto;column-gap:24px}
+.summary .small{white-space:normal}.summary .val{overflow-wrap:break-word}
+.link-btn{max-width:100%;align-items:flex-start}.link-btn .lk-one{min-width:0;flex:1}.link-btn .lk-one>span:first-child{max-width:none}
+
+/* Shrnutí kontaktu podle původního návrhu (Figma 328:4275) */
+.summary.c-sum{display:flex;flex-direction:column;gap:16px;max-height:200px;padding:16px 24px}
+.summary.c-sum.open{max-height:600px}
+.cs-row{display:flex;align-items:flex-start;gap:40px}
+.cs-g{display:flex;gap:80px;align-items:flex-start}
+.cs-a{margin-left:auto;gap:40px;padding-left:40px;border-left:1px solid var(--n100);align-items:center}
+.cs-cal{color:var(--teal-a);display:flex}
+.c-sum .val{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.c-sum .cs-a .val{display:block}
+.cs-sup{font-size:12px;line-height:16px;color:var(--n500);margin-top:4px}
+.cs-hint{display:inline-flex;color:var(--n500);cursor:help}.cs-hint.amb{color:var(--amber)}.cs-hint.red{color:var(--red)}
+.cs-tog{align-self:flex-start;font-weight:500}
+.cs-more{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding-top:16px;border-top:1px solid var(--n100)}
+.cs-col{padding:0 24px;border-left:1px solid var(--n100);min-width:0}.cs-col:first-child{padding-left:0;border-left:0}
+.cs-col .links{margin-top:8px}.cs-col .link-r{max-width:none}
+.cs-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cs-act-l{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px;font-size:12px;line-height:16px}
+.cs-row{align-self:stretch}.cs-col .own-r>:last-child:not(.own-b){display:none}.cs-col .own-r .small{white-space:nowrap}
+.cs-more{align-self:stretch}
+/* Shrnutí kontaktu: vše vidět; při posouvání se skryje jen druhá část (propojené, správci, štítky) */
+.summary.c-sum{gap:0;max-height:none}
+.c-sum .cs-more{margin-top:16px;max-height:400px;overflow:hidden;transition:max-height .2s,margin .2s,padding .2s,opacity .2s}
+
+/* Detail kontaktu (11/2026): víc vzduchu pod drobečkovkou, dlouhé jméno se zalomí,
+   hlavička a shrnutí odjedou s obsahem; přilepí se jen záložky a nad nimi úzký řádek se jménem */
+.crumbs+.ent-head{margin-top:16px}
+.det-head{margin-bottom:24px}
+.ent-name{flex:1;min-width:0}
+.ent-name h1{overflow-wrap:break-word}
+.ent-acts{display:flex;align-items:center;gap:8px;flex:none;margin-top:4px}
+.ent-acts .more{margin-left:8px}
+.det-bar{position:sticky;top:48px;z-index:5;flex:none;margin:0 -32px 24px;padding:0 32px;background:var(--n50)}
+.det-bar .tabs{margin-bottom:0}
+.det-mini{position:absolute;left:0;right:0;bottom:100%;height:72px;padding:0 32px;display:flex;align-items:center;gap:16px;background:var(--n50);visibility:hidden;opacity:0;transition:opacity .15s,visibility 0s .15s}
+.det-bar.stuck .det-mini{visibility:visible;opacity:1;transition:opacity .15s}
+.det-mini-n{flex:1;min-width:0;font:600 16px/24px Poppins;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.det-mini .ent-acts{margin-top:0}
+/* Přilepený řádek: jméno, nejčastější údaje a celé shrnutí po rozbalení */
+.det-mini-b{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.det-mini-n{flex:none}
+.det-mini-f{display:flex;align-items:center;gap:24px;min-width:0;font-size:12px;line-height:16px;color:var(--n700);white-space:nowrap;overflow:hidden}
+.mf{display:inline-flex;align-items:center;gap:8px;min-width:0}.mf>.ic{flex:none;color:var(--n500)}
+.mf>a,.mf>span:last-child{overflow:hidden;text-overflow:ellipsis}
+.mf-tog{display:inline-flex;align-items:center;gap:4px;flex:none;border:0;background:none;padding:0;font:500 12px/16px Poppins;color:var(--teal-a);cursor:pointer}
+.mf-tog .ic{transition:transform .15s}.mf-tog.on .ic{transform:rotate(180deg)}
+.det-sum{position:absolute;top:100%;left:32px;right:32px;margin-top:8px;z-index:6;max-height:calc(100vh - 64px - 72px - 44px - 32px);overflow:auto;border-radius:8px;box-shadow:var(--shadow);background:#fff}
+.det-sum .summary.c-sum{margin:0}
+.det-mini-f{gap:16px}
+.mf{flex:none}.mf.mf-next{flex:0 1 auto}
+.det-sum{margin-top:0;border-radius:0 0 8px 8px}
+/* Menu: sekce Práce a Lidé bez šipky, sbalují se kliknutím na název */
+button.nhead{cursor:pointer}
+
+/* Dokumenty v detailu kontaktu: K vyřízení + jeden seznam */
+.fic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:40px;height:40px;border-radius:8px;font:600 10px/16px Poppins;letter-spacing:.02em}
+.fic-pdf{background:var(--red-bg);color:var(--red)}.fic-doc{background:var(--blue-bg);color:var(--blue)}.fic-img{background:var(--n100);color:var(--n700)}
+.doc-todo .card-head{margin-bottom:8px}.doc-todo h2 .mute{font-weight:400}
+.doc-todo-r{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--n100)}
+.doc-todo-t{flex:1;min-width:0;display:flex;flex-direction:column;color:inherit}.doc-todo-t:hover{text-decoration:none}.doc-todo-t:hover .med{color:var(--teal-a)}
+.doc-todo-w{width:200px;flex:none}
+.doc-list{position:relative}
+.doc-list .card-head{flex-wrap:wrap}
+.doc-f button{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 16px;border-radius:6px;font-size:12px;line-height:16px}
+.doc-f button .mute{font-weight:400}
+.doc-tbl{width:100%;margin-top:8px}
+.doc-tbl th:nth-child(1){width:38%}.doc-tbl th:last-child{width:48px}
+.doc-tbl tbody tr{cursor:pointer}
+.doc-n{display:flex;align-items:center;gap:16px}.doc-nt{display:flex;flex-direction:column;min-width:0}
+.doc-tbl tr:hover .doc-nt .med{color:var(--teal-a)}
+.r-acts{text-align:right}
+.doc-miss{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin-top:16px;padding:16px;border-radius:8px;background:var(--n50);font-size:12px;line-height:16px;color:var(--n700)}
+.doc-miss>.ic{color:var(--n500)}.doc-miss a{font-weight:500}
+.doc-dropz{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:16px;border:1px dashed var(--n200);border-radius:8px;font-size:12px;line-height:16px;color:var(--n500)}
+.doc-list.drop{box-shadow:inset 0 0 0 2px var(--teal-a)}.doc-list.drop .doc-dropz{border-color:var(--teal-a);color:var(--teal-a);background:var(--teal-bg)}
+.empty .btn .ic{width:16px;height:16px;margin:0;color:inherit}
+/* Končící souhlas: všude stejně, oranžově „Souhlas končí …“, červeně jen po vypršení */
+.c-sum .val:has(>.cs-sup){flex-direction:column;align-items:flex-start;gap:0}
+.cs-sup.amb{color:var(--amber)}.cs-sup.red{color:var(--red)}
+/* Organizace: lidé a jejich souhlasy */
+.cons-r{max-width:none;width:calc(100% + 16px)}.cons-r>.badge{margin-left:auto}.cons-r>.ic:last-child{margin-left:16px}
+/* Přidat aktivitu: přepínač proběhlá / naplánovat */
+.act-mode{display:flex}.act-mode button{flex:1;height:32px;border-radius:6px;font-size:12px;line-height:16px}
+/* Hlavička: hodnocení s popiskem */
+.ent-rate{display:inline-flex;align-items:center;gap:8px}
+.ent-meta>.sep-dot{display:inline-flex;align-items:center}
+/* Jak a kdy kontaktovat */
+.how-b{padding:16px;border-radius:8px}
+.kh-sum{padding:0 8px 8px;margin-top:-8px}
+.field .co-list label.row{display:flex;gap:8px;align-items:center;margin:0}
+.inp:disabled{background:var(--n100);color:var(--n400);cursor:not-allowed}
+
+/* === Barevný systém (9. 11. 2026) ===
+   Signál:     červená = riziko / po termínu, amber = pozornost dnes, zelená = úspěch, teal = aktivní / naplánované, fialová = nepřítomnost.
+   Brand růžová: „teď a nové“ – čára aktuálního času, nepřečtené notifikace, počet notifikací. Nic jiného.
+   Oslavy:     orchidejová – narozeniny a svátky (dort, dárek, štítky v kalendáři).
+   Aktivity:   stejná barva všude (časová osa, kalendář, rozvrh na Přehledu, kategorie úkolu):
+               Hovor modrá, Schůzka fialová, E-mail/SMS teal, Úkol tmavě modrozelená, Poznámka hnědá, Dokument břidlicová, Událost a ostatní šedá. */
+:root{--cel:#a21caf;--cel-bg:#fae8ff}
+.ev[class*="k-"]{background:var(--kb);color:var(--kf)}
+.ev[class*="k-"]:hover{filter:brightness(.97)}
+.ev.ev-past{background:var(--n100);color:var(--n500)}
+.ev.ev-no{background:var(--red-bg);color:var(--red)}
+.ev-b[class*="k-"]{box-shadow:inset 3px 0 0 var(--kf)}
+.ev-b.ev-past{box-shadow:inset 3px 0 0 var(--n400)}.ev-b.ev-no{box-shadow:inset 3px 0 0 var(--red)}
+.sl[class*="k-"]::before{border-color:var(--kf)}
+.sl[class*="k-"].past::before{background:var(--n400);border-color:var(--n400)}
+.sl[class*="k-"].next-e::before{background:var(--kf);border-color:var(--kf);box-shadow:0 0 0 4px var(--kb)}
+.cal-type .sw{width:8px;height:8px;border-radius:50%;background:var(--kf);flex:none}
+/* Dlaždice nahoře fungují jako filtr: klik zapne, druhý klik vypne */
+button.stat{text-align:left;border:1px solid transparent;cursor:pointer;transition:border-color .12s;width:100%}
+button.stat:hover{border-color:var(--teal)}
+button.stat.on{border-color:var(--teal-a);box-shadow:inset 0 0 0 1px var(--teal-a)}
+
+/* Hlavička: docházka a běžící měření času. Vidět na každé stránce, ovládání jedním klikem. */
+.wps{margin-left:auto;margin-right:16px;display:flex;align-items:center;gap:8px}
+.wps~.head-actions{margin-left:0}
+.wp{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 16px;border-radius:16px;background:rgba(255,255,255,.16);color:#fff;font:500 12px/16px Poppins;white-space:nowrap}
+.wp .ic{width:16px;height:16px}
+button.wp:hover{background:rgba(255,255,255,.26)}
+.wp b{font-weight:600;font-variant-numeric:tabular-nums}
+.wp-off{color:rgba(255,255,255,.85)}
+.wp-dot{width:8px;height:8px;border-radius:50%;background:var(--n400);flex:none;display:inline-block}
+.wp-dot.grn{background:#4ade80}.wp-dot.amb{background:#fbbf24}.wp-dot.pink{background:var(--pink)}
+.wp-tmr{background:#fff;color:var(--n900);padding:0 8px 0 16px;box-shadow:0 2px 8px rgba(0,0,0,.16)}
+.wp-tmr.run .wp-dot{animation:wpPulse 1.6s ease-in-out infinite}
+@keyframes wpPulse{0%,100%{box-shadow:0 0 0 0 rgba(233,73,112,.5)}50%{box-shadow:0 0 0 4px rgba(233,73,112,0)}}
+.wp-n{max-width:160px;overflow:hidden;text-overflow:ellipsis;color:var(--n900);font-weight:500}
+.wp-tmr button{width:24px;height:24px;border-radius:12px;display:grid;place-content:center;color:var(--n700)}
+.wp-tmr button:hover{background:var(--n100);color:var(--n900)}
+.wp-tmr button .ic{width:16px;height:16px}
+.tlog{display:flex;align-items:center;gap:16px;padding:8px 0;border-top:1px solid var(--n100)}
+.tlog-d{width:64px;flex:none}
+.prog-amb i{background:var(--amber)}
+/* Stopky: plovoucí panel vpravo dole, jen když se měří */
+.wp-tmr{position:fixed;right:24px;bottom:24px;z-index:25;height:auto;min-height:56px;border-radius:28px;padding:8px 8px 8px 16px;gap:16px;box-shadow:var(--shadow)}
+.wp-tmr>.ic{width:24px;height:24px;color:var(--teal-a)}
+.wp-l{display:flex;flex-direction:column;line-height:16px;min-width:0}
+.wp-tmr .wp-n{max-width:240px;font-size:14px;line-height:20px}
+.wp-tmr b{font-size:16px;line-height:24px;min-width:64px}
+.wp-tmr button{width:40px;height:40px;border-radius:20px}
+.wp-tmr button .ic{width:20px;height:20px}
+body:has(.wp-tmr) .main{padding-bottom:104px}
+
+/* ---- Docházka a měření času (2. verze) ----
+   Docházka: úvodní pruh Přehledu (.ah) + nabídka pod avatarem (.am) + tečka stavu na avataru (.me-dot).
+   Měření: v detailu úkolu v hlavičce (.tmr-in), jinde tmavý plovoucí panel (.wp-tmr) v barvě hlavičky, aby se neztrácel mezi bílými kartami. */
+.me-w{position:relative}
+.me-dot{position:absolute;right:2px;bottom:2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--dark);pointer-events:none}
+.me-dot.grn{background:#4ade80}.me-dot.amb{background:#fbbf24}
+.am{padding:8px 8px 16px;border-bottom:1px solid var(--n100);margin-bottom:8px}
+.am-b{display:flex;gap:8px;margin-top:16px}.am-b .btn{flex:1}
+.ah{position:relative;margin-top:24px;max-width:560px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);border-radius:12px;padding:16px;backdrop-filter:blur(6px)}
+.ah-r{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ah-st{display:inline-flex;align-items:center;gap:8px;font:500 14px/20px Poppins}
+.ah-t{font:600 22px/28px Poppins}
+.ah-s{font-size:12px;line-height:16px;opacity:.9}
+.ah .btn.ah-in{background:#fff;color:var(--dark);border-color:#fff;height:40px;padding:0 24px;font-size:14px;font-weight:500}
+.ah .btn.ah-in:hover{background:var(--n50)}
+.ah .btn.ah-g{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.ah .btn.ah-g:hover{background:rgba(255,255,255,.14)}
+.ah-bal{display:inline-flex;align-items:center;gap:8px;margin-top:16px;color:#fff;font-size:12px;line-height:16px;opacity:.95}
+.ah-bal:hover{color:#fff;text-decoration:underline}
+.wp-tmr{display:flex;align-items:center;white-space:nowrap;background:var(--dark);color:#fff;font:500 12px/16px Poppins;box-shadow:0 4px 16px rgba(19,26,28,.32)}
+.wp-tmr>.ic{color:#fff;opacity:.9}
+.wp-tmr .wp-n{color:#fff}
+.wp-s{font-size:12px;line-height:16px;opacity:.8}
+.wp-tmr button{color:#fff}.wp-tmr button:hover{background:rgba(255,255,255,.16);color:#fff}
+.tmr-in{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 4px 0 16px;border-radius:20px;background:var(--dark);color:#fff;font:500 12px/16px Poppins;white-space:nowrap}
+.tmr-in b{font:600 16px/24px Poppins;min-width:64px}
+.tmr-in button{width:32px;height:32px;border-radius:16px;display:grid;place-content:center;color:#fff}
+.tmr-in button:hover{background:rgba(255,255,255,.16)}
+.tmr-in button .ic{width:16px;height:16px}
+.tmr-in.run .wp-dot{animation:wpPulse 1.6s ease-in-out infinite}
+.stat-a{display:block}
+.cnt{display:inline-grid;place-content:center;min-width:20px;height:20px;padding:0 4px;border-radius:10px;background:var(--amber-bg);color:var(--amber);font:600 12px/16px Poppins;vertical-align:middle}
+.att-warn{display:flex;align-items:center;gap:8px;padding:8px 16px;margin-bottom:16px;border-radius:8px;background:var(--amber-bg);color:var(--amber)}
+.att-warn span{color:var(--n900)}
+.att-days td{padding-top:8px;padding-bottom:8px}
+.att-days tr.att-today td{background:var(--n50)}
+.appr{padding:16px 0;border-top:1px solid var(--n100)}.appr:first-of-type{border-top:0;padding-top:0}
+.d.c-P,.d.c-H,.d.c-C{background:var(--green)}.d.c-H,.d.c-C{background:var(--teal-a)}
+.d.c-Z{background:var(--amber)}.d.c-Q{background:#fff;color:var(--amber);box-shadow:inset 0 0 0 2px var(--amber)}
+.d.c-D,.d.c-V,.d.c-U,.d.c-L,.d.c-N,.d.c-O,.d.c-K,.d.c-J{background:var(--violet)}
+.d.c-A{background:var(--red)}
+.matrix th:last-child,.matrix th:nth-last-child(2){width:56px}
+.ah-f{display:flex;align-items:center;gap:8px;margin-top:16px}.ah-f .ah-s{margin-left:8px}
+.ah .ah-bal{margin-top:0}
+body:has(.wp-tmr) .toast{bottom:104px}
+.att-days td:nth-child(5){white-space:normal;width:100%}
+
+/* 5. kolo: křížek v pravém horním rohu všech oken */
+.modal{position:relative}
+.modal-x{position:absolute;top:16px;right:16px;width:32px;height:32px;border:0;background:none;border-radius:8px;display:grid;place-items:center;color:var(--n500);cursor:pointer}
+.modal-x:hover{background:var(--n100);color:var(--n900)}
+.modal>h2:first-of-type{padding-right:40px}

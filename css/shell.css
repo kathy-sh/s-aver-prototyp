@@ -1,0 +1,99 @@
+/* 5. kolo – hlavička, hledání, záložky, jednotné hover efekty (hlavní vlákno) */
+
+/* Docházka v hlavičce: jeden malý prvek vlevo od notifikací */
+.hp{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 16px;margin-right:8px;border-radius:16px;background:rgba(255,255,255,.16);color:#fff;font:500 12px/16px Poppins;white-space:nowrap;cursor:pointer;transition:background .12s}
+.hp:hover{background:rgba(255,255,255,.28)}
+.hp .wp-dot{width:8px;height:8px}
+.hp.hp-go{background:#fff;color:var(--dark);padding:0 16px 0 8px}
+.hp.hp-go:hover{background:var(--n50)}
+.hp.hp-go .ic{width:16px;height:16px;color:var(--teal-a)}
+.hpp{padding:8px}
+.hpp b{font:600 14px/20px Poppins}
+.hpp-b{display:flex;gap:8px;margin-top:16px}
+.hpp-b .btn{flex:1;justify-content:center}
+
+/* Globální hledání: spouštěč v hlavičce + modální okno */
+#gsi{cursor:pointer}
+.modal.gsm{width:720px;max-width:calc(100vw - 32px);padding:0;display:flex;flex-direction:column;max-height:calc(100vh - 160px)}
+.gsm .modal-x{top:16px;right:16px}
+.gs-in{display:flex;align-items:center;gap:16px;height:64px;padding:0 64px 0 24px;border-bottom:1px solid var(--n100);color:var(--n500)}
+.gs-in svg{width:20px;height:20px;flex:none}
+.gs-in input{flex:1;border:0;outline:0;background:none;font:400 18px/24px Poppins;color:var(--n900)}
+.gs-in input::placeholder{color:var(--n400)}
+.gs-sc{display:flex;flex-wrap:wrap;gap:8px;padding:16px 24px 8px}
+.gs-sc .chip{height:28px;padding:0 8px;cursor:pointer;color:var(--n700)}
+.gs-sc .chip:hover{border-color:var(--teal);color:var(--n900)}
+.gs-sc .chip.on{background:var(--teal-a);border-color:var(--teal-a);color:#fff}
+.gs-opt{display:flex;gap:24px;padding:0 24px 16px;border-bottom:1px solid var(--n100);font-size:12px;line-height:16px;color:var(--n700)}
+.gs-opt label{gap:8px;cursor:pointer}
+.gs-body{overflow:auto;padding:8px 16px 16px;min-height:96px}
+.gsm h4{margin:8px 8px 4px;font:600 12px/16px Poppins;color:var(--n500);text-transform:uppercase}
+.gsm h4 span{font-weight:400;margin-left:4px}
+.gsm a.gs-it{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;color:var(--n900);outline:0}
+.gsm a.gs-it .ic{color:var(--n500);flex:none}
+.gsm a.gs-it .spacer{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gsm a.gs-it small{flex:none;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--n500);font-size:12px}
+.gsm a.gs-it:hover,.gsm a.gs-it:focus{background:var(--teal-bg);text-decoration:none}
+.gs-more{display:block;width:100%;text-align:left;padding:8px;border-radius:8px;color:var(--teal-a);font-size:12px}
+.gs-more:hover{background:var(--n50)}
+.gs-none{padding:24px 8px;color:var(--n700)}
+
+/* Linka pod záložkami: stejná barva jako text záložek */
+.tabs{border-bottom:1px solid var(--gray)}
+
+/* Jednotné hover efekty */
+a.person,.person[data-go],.person[data-a]{border-radius:8px;margin:0 -8px;padding-left:8px;padding-right:8px;transition:background .12s}
+a.person:hover,.person[data-go]:hover,.person[data-a]:hover{background:var(--n50);text-decoration:none;cursor:pointer}
+[data-go]{cursor:pointer}
+.card[data-go]{transition:box-shadow .12s}
+.card[data-go]:hover{box-shadow:0 0 0 1px var(--teal)}
+.tbl tbody tr[style*="cursor:default"]:hover td{background:inherit}
+.tbl tbody tr[style*="cursor:default"]:nth-child(even):hover td{background:#f7f7f7}
+.tbl tbody tr[style*="cursor:default"]:nth-child(odd):hover td{background:#fff}
+.link-btn{cursor:pointer}
+.link-btn:hover{color:var(--dark)}
+.who[href]:hover,a.who:hover{text-decoration:none}
+a.who:hover span:last-child{text-decoration:underline}
+.hp-l{opacity:.85;font-weight:400;margin-right:-2px}
+
+/* Hover: hlavička, segmenty, stránkování, drobná tlačítka */
+.header .head-btn[data-a],.header a.head-btn,.header .credits{border-radius:22px;transition:background .12s}
+.header .head-btn[data-a]:hover,.header a.head-btn:hover,.header .credits:hover{background:rgba(255,255,255,.16);text-decoration:none}
+.seg button:not(.on):hover{background:rgba(255,255,255,.12)}
+.seg-w button:not(.on):hover,.seg-l button:not(.on):hover{background:rgba(255,255,255,.6);color:var(--n900)}
+.foot .pg button:not([disabled]):hover{background:#fff;color:var(--dark)}
+[data-a=planhide]{border-radius:8px}[data-a=planhide]:hover{background:rgba(255,255,255,.16)}
+label.row.sb:has(input){cursor:pointer}label.row.sb:has(input):hover{color:var(--teal-a)}
+
+.g-more{display:block;width:100%;padding:8px 16px;text-align:left;color:var(--teal-a);font-size:12px;line-height:16px;border-radius:8px}
+.g-more:hover{background:var(--n50)}
+[data-a=pageprev]:not([disabled]):hover,[data-a=pagenext]:not([disabled]):hover{background:#fff;color:var(--dark)}
+.mf-tog:hover,.tl-tog:hover{color:var(--dark);text-decoration:underline}
+label.set-row{cursor:pointer;border-radius:8px;transition:background .12s}label.set-row:hover{background:var(--n50)}
+label.set-row{margin-left:-8px;margin-right:-8px;padding-left:8px;padding-right:8px}
+.gs-in,.gs-sc,.gs-opt{flex:none}
+
+/* Okna, popovery a panel nikdy nepřesahují obrazovku */
+.ov{padding:clamp(32px,10vh,96px) 32px 32px;overflow:hidden}
+.modal{display:flex;flex-direction:column;max-width:calc(100vw - 64px);max-height:calc(100vh - clamp(32px,10vh,96px) - 32px);overflow:hidden}
+.modal>*{flex:none}
+.modal>.modal-b{flex:1 1 auto;min-height:0;overflow:auto;margin:0 -24px;padding:0 24px 2px;overscroll-behavior:contain}
+.modal>.modal-b.sc{border-bottom:1px solid var(--n100)}
+.modal>.modal-b.sct{border-top:1px solid var(--n100)}
+.modal>.modal-b+.ft{margin-top:16px}
+.gs-ov{padding-top:clamp(32px,10vh,80px)}
+.modal.gsm{max-height:calc(100vh - clamp(32px,10vh,80px) - 32px)}
+.pop{overflow:auto;max-height:calc(100vh - 16px);max-width:calc(100vw - 16px)}
+.panel{max-height:calc(100vh - 88px);overflow:auto;max-width:calc(100vw - 32px)}
+.modal-b .ft:last-child{position:sticky;bottom:0;z-index:2;background:#fff;margin-top:16px;padding:16px 0 0;box-shadow:0 -1px 0 var(--n100)}
+/* Oslavy: e-mail se nedotýká správce, řádek reaguje na hover */
+.cel-t td{overflow:hidden;text-overflow:ellipsis}
+.cel-t td+td{padding-left:16px}
+.cel-t tbody tr:hover td,.cel-t tr:hover td{background:var(--n50)}
+[hidden]{display:none!important}
+/* Šířka obsahu stejná i na krátkých stránkách (bez posuvníku) */
+.main{scrollbar-gutter:stable}
+/* Hromadné akce a Zrušit výběr v liště výběru: obě stejně, obrysová na tmavé liště */
+.bulk .btn.bulk-main{background:transparent;border-color:rgba(255,255,255,.5);color:#fff;font-weight:500}
+.bulk .btn.bulk-main .ic{color:#fff}
+.bulk .btn.bulk-main:hover{background:rgba(255,255,255,.12);border-color:#fff;color:#fff}

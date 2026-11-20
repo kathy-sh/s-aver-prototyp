@@ -1,0 +1,446 @@
+/* Responzivní rozvržení: tablet (do 1199 px) a mobil (do 599 px).
+   Desktop od 1200 px zůstává beze změny. Menu je na menších šířkách vysouvací panel pod hlavičkou. */
+.burger,.head-search,.nav-scrim{display:none}
+
+@media (max-width:1199px){
+  body{min-width:0}
+  /* Hlavička */
+  .header{padding:0 16px 0 8px;gap:8px}
+  .burger{display:flex}
+  .burger svg{width:24px;height:24px}
+  .search{position:static;transform:none;flex:1;min-width:0;max-width:360px;margin-left:16px}
+  .head-actions{flex:none}
+  .credits{padding-right:0;font-size:0;gap:0}
+  /* Vysouvací menu */
+  .sidebar,body.rail .sidebar{width:280px;z-index:25;transform:translateX(-100%);transition:transform .2s ease;box-shadow:none;visibility:hidden}
+  body.nav-open .sidebar{transform:none;visibility:visible;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+  body.rail .lbl{display:inline}
+  body.rail .nav{width:calc(100% - 16px);margin:0 8px;padding:0 8px 0 0;gap:4px}
+  .ncollapse{display:none!important}
+  .nav-scrim{display:block;position:fixed;inset:64px 0 0 0;background:rgba(19,26,28,.4);z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
+  body.nav-open .nav-scrim{opacity:1;pointer-events:auto}
+  /* Obsah */
+  .main,body.rail .main{margin-left:0;padding:24px 24px 48px}
+  .main.has-foot{padding-bottom:0}
+  .foot{margin:24px -24px 0;padding:0 24px}
+  .toast,body.rail .toast{left:50%}
+  .g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media (max-width:599px){
+  .header{padding:0 8px 0 4px;gap:0}
+  .logo{width:28px;overflow:hidden;flex:none;margin-left:4px}
+  .search{display:none}
+  .head-search{display:flex;margin-left:auto}.head-search svg{width:20px;height:20px}
+  .head-actions{margin-left:0;gap:0}
+  .head-actions .credits,.head-actions a.head-btn[href="#/napoveda"]{display:none}
+  .hp{padding:0 16px;margin-right:0;gap:8px}
+  .hp .hp-l{display:none}
+  .sidebar,body.rail .sidebar{width:min(304px,calc(100vw - 56px))}
+  .main,body.rail .main{padding:16px 16px 40px}
+  .foot{margin:16px -16px 0;padding:0 16px}
+  .crumbs{display:none}
+  .page-head{gap:8px;margin-bottom:16px}
+  .page-head h1{font-size:20px;line-height:28px}
+  .g2,.g3,.g4,.g5{grid-template-columns:minmax(0,1fr)}
+  .card{padding:16px}
+}
+
+/* Přehled */
+@media (max-width:1199px){
+  .dash-top{padding:0;flex-wrap:nowrap;align-items:flex-start;gap:16px;margin-bottom:0}.dash-top>.dash-date{flex:1;min-width:0}.dash-top>.row:last-child{flex:none}
+  .dash-date{gap:8px 16px}
+  .hero{grid-template-columns:minmax(0,1fr);gap:24px;padding:32px 32px 104px}
+  .hero h1{font-size:32px;line-height:40px}
+  .kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin:-80px 24px 0}
+  .kpi{flex-direction:column;align-items:flex-start;gap:8px}
+  .dgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dgrid .w3,.dgrid .w2{grid-column:span 2}
+}
+@media (max-width:599px){
+  .dash{gap:16px}
+    .dash-date{font-size:12px;line-height:16px}
+  .hero{padding:24px 16px 16px;border-radius:8px;gap:16px}
+  .hero h1{font-size:24px;line-height:32px}
+  .next{padding:16px;min-height:0}
+  .next-then{width:calc(100% + 32px);margin:16px -16px -16px;padding:16px}
+  .next-go{top:16px;right:16px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}
+  .kpi{flex-direction:row;align-items:center;gap:8px;padding:8px 16px 8px 8px;box-shadow:none}
+  .kpi .ring{width:40px;height:40px}
+  .kpi b{font-size:20px;line-height:24px}.kpi span{font-size:10px;line-height:12px}
+  .dgrid{grid-template-columns:minmax(0,1fr);gap:16px}
+  .dgrid .w3,.dgrid .w2,.dgrid .w1{grid-column:auto}
+}
+
+/* Seznamy: nadpis, akce a seznam kontaktů */
+@media (max-width:1199px){
+  .page-head.list-h{flex-wrap:wrap;padding-left:0;row-gap:16px}
+  .page-head.list-h .acts{flex:1 1 100%;order:2;margin-left:0}
+  .page-head.list-h .acts>input.inp{flex:1;min-width:0;width:auto!important}
+  /* Tabulka kontaktů jako seznam: jméno, stav · vztah; vpravo telefon a poslední aktivita */
+  .tbl-card:has(.tbl.frozen){overflow:visible;background:none}
+  .tbl.frozen,.tbl.frozen tbody{display:block}
+  .tbl.frozen thead{display:none}
+  .tbl.frozen tbody tr{display:grid;grid-template-columns:40px auto minmax(0,1fr) 176px 40px;grid-template-areas:"cb n n ph more" "cb s r act more";align-items:center;column-gap:8px;row-gap:4px;padding:16px 8px 16px 16px;background:#fff;border-bottom:1px solid var(--n100)}
+  .tbl.frozen tbody tr:first-child{border-radius:8px 8px 0 0}.tbl.frozen tbody tr:last-child{border-radius:0 0 8px 8px;border-bottom:0}
+  .tbl.frozen tbody tr td{display:none;padding:0;height:auto;background:none!important;position:static;width:auto!important;min-width:0!important;max-width:none!important;box-shadow:none!important;border:0}
+  .tbl.frozen tbody tr.sel{background:var(--teal-bg)}
+  .tbl.frozen td:first-child{display:block;grid-area:cb}
+  .tbl.frozen td.c-name{display:block;grid-area:n;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tbl.frozen td.c-name .row{display:inline;font-weight:600}
+  .tbl.frozen td[data-k="status"]{display:block;grid-area:s;font-size:12px;line-height:16px}
+  .tbl.frozen td[data-k="rel"]{display:block;grid-area:r;font-size:12px;line-height:16px;color:var(--n700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tbl.frozen td[data-k="rel"]::before{content:"·";margin:0 8px 0 0;color:var(--n400)}
+  .tbl.frozen td[data-k="phone"]{display:block;grid-area:ph;white-space:nowrap}
+  .tbl.frozen td[data-k="act"]{display:block;grid-area:act;font-size:12px;line-height:16px;color:var(--n700);white-space:nowrap}
+  .tbl.frozen td:last-child{display:flex;grid-area:more;justify-content:center}
+}
+@media (max-width:599px){
+  .page-head.list-h .acts>.btn{width:40px;height:40px;padding:0;justify-content:center;font-size:0;gap:0}
+  .page-head.list-h .acts>.btn .ic{width:20px;height:20px}
+  .page-head.list-h .acts>input.inp{height:40px!important}
+  /* Hlavní přidání jako plovoucí tlačítko vpravo dole, nad patičkou se stránkováním */
+  .page-head .acts>.btn.fab{position:fixed;right:16px;bottom:16px;z-index:15;width:56px;height:56px;padding:0;border-radius:16px;justify-content:center;font-size:0;gap:0;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+  .page-head .acts>.btn.fab .ic{width:24px;height:24px}
+  body:has(.foot) .page-head .acts>.btn.fab{bottom:64px}
+  .main:has(.btn.fab){padding-bottom:88px}
+  .main.has-foot:has(.btn.fab){padding-bottom:0}
+  .main.has-foot:has(.btn.fab) .foot{margin-top:88px}
+  .tbl.frozen tbody tr{grid-template-columns:40px auto minmax(0,1fr) 40px;grid-template-areas:"cb n n more" "cb s r more"}
+  .tbl.frozen td[data-k="phone"],.tbl.frozen td[data-k="act"]{display:none}
+  /* Patička: jen počet a stránky */
+  .foot{gap:16px}
+  .foot .f-l,.foot .f-size{display:none}
+}
+
+/* Detail entity: hlavička, souhrn, karty */
+@media (max-width:1199px){
+  .ent-head{flex-wrap:wrap;padding-left:0}
+  .ent-head>.av.a88,.ent-head>img.av.a88{width:72px;height:72px}
+  .ent-name{flex:1 1 0}
+  .ent-acts{flex:1 1 100%;margin:8px 0 0 88px}
+  .ent-acts .more{margin-left:auto}
+  .cs-row{flex-direction:column;gap:16px}
+  .cs-g{gap:40px}
+  .cs-a{margin-left:0;padding:16px 0 0;border-left:0;border-top:1px solid var(--n100);align-self:stretch}
+  .cs-more{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}
+  .cs-col:nth-child(3){padding-left:0;border-left:0}
+  .cs-col:nth-child(n+3){padding-top:16px;border-top:1px solid var(--n100)}
+  .det-mini{padding:0 24px}
+  .det-mini-f{display:none}
+  .sub-tabs{overflow-x:auto;scrollbar-width:none}.sub-tabs::-webkit-scrollbar{display:none}
+  .sub-tab{white-space:nowrap;flex:none}
+}
+@media (max-width:599px){
+  /* Drobečky: na detailu jen odkaz zpět na nadřazený seznam */
+  .crumbs:has(a+span+a){display:flex;align-items:center;height:40px;margin:-8px 0 0;font-size:0}
+  .crumbs:has(a+span+a)>*{display:none}
+  .crumbs:has(a+span+a)>a:nth-last-of-type(1){display:inline-flex;align-items:center;gap:8px;font:500 14px/20px Poppins;color:var(--n700)}
+  .crumbs:has(a+span+a)>a:nth-last-of-type(1)::before{content:"";width:8px;height:8px;border:solid currentColor;border-width:0 0 1.5px 1.5px;transform:rotate(45deg);margin-left:4px}
+  .crumbs+.ent-head{margin-top:16px}
+  .ent-head{position:relative;gap:16px;margin-bottom:16px}
+  .ent-head>.av,.ent-head>img.av{margin-right:0}
+  .ent-head>.av.a88,.ent-head>img.av.a88{width:56px;height:56px}
+  .ent-head h1{font-size:20px;line-height:28px;margin:0 0 4px}
+  .ent-acts{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ent-acts .btn{justify-content:center;padding:0 8px}
+  .ent-acts>a.btn:not(.pri),.ent-acts>button.btn:not(.pri),.ent-acts>.more{position:absolute;top:-56px;width:40px;height:40px;padding:0;margin:0;font-size:0;gap:0;justify-content:center;border:0;background:none}
+  .ent-acts>.more{right:0}
+  .ent-acts>a.btn:not(.pri),.ent-acts>button.btn:not(.pri){right:48px}
+  .ent-acts>a.btn:not(.pri) .ic,.ent-acts>button.btn:not(.pri) .ic{width:20px;height:20px;color:var(--n700)}
+  .cs-g{flex-direction:column;gap:16px}
+  .cs-a{flex-direction:row;flex-wrap:wrap;gap:16px 24px}
+  .cs-a .cs-cal{display:none}
+  .cs-more{grid-template-columns:minmax(0,1fr)}
+  .cs-col,.cs-col:nth-child(3){padding:16px 0 0;border-left:0;border-top:1px solid var(--n100)}
+  .cs-col:first-child{padding-top:0;border-top:0}
+  .det-mini{padding:0 16px;height:64px}
+  .det-mini>.av{display:none}
+  .det-mini .ent-acts{display:none}
+  .grid.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .addr{grid-template-columns:minmax(0,1fr)}
+  .addr .grid.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card-head{gap:8px;flex-wrap:wrap}
+}
+@media (max-width:599px){
+  .c-sum .cs-more{max-height:none}
+  .sens>span:first-child{white-space:nowrap}
+}
+
+/* Úkoly a obecné stránky s akcemi */
+.meta .mi{display:inline-flex;align-items:center;gap:8px;min-width:0}
+@media (max-width:1199px){
+  .tile-t{flex-direction:column;align-items:flex-start;gap:0;padding:16px}
+  .grid.g5:has(>.tile-t){grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+  .wrap>.row:has(>.tabbar){flex-wrap:wrap;gap:16px 8px;margin-bottom:24px}
+  .wrap>.row:has(>.tabbar)>.tabbar{flex:1 1 100%!important}
+  .wrap>.row:has(>.tabbar)>.tabbar .tabs{margin-bottom:0}
+  .wrap>.row:has(>.tabbar)>.spacer{display:none}
+  .wrap>.row:has(>.tabbar)>select.inp{flex:1 1 0;min-width:0}
+}
+@media (max-width:599px){
+  .page-head .acts>.btn:not(.pri){width:40px;height:40px;padding:0;justify-content:center;font-size:0;gap:0}
+  .page-head .acts>.btn:not(.pri) .ic{width:20px;height:20px}
+  .page-head>.ic.s32{width:24px;height:24px}
+  .grid.g5:has(>.tile-t){display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px;gap:8px;scroll-snap-type:x mandatory}
+  .grid.g5:has(>.tile-t)::-webkit-scrollbar{display:none}
+  .grid.g5>.tile-t{flex:0 0 112px;scroll-snap-align:start;padding:8px 16px}
+  .tile-t b{font-size:20px;line-height:28px}.tile-t span{font-size:10px;line-height:16px;white-space:nowrap}
+  .wrap>.row:has(>.tabbar)>select.inp{font-size:12px;height:40px;text-overflow:ellipsis}
+  .group{padding:16px}
+  .task{gap:8px}
+  .meta{row-gap:4px}
+  .meta .md{display:none}
+  .meta .mi{flex:1 1 100%;flex-wrap:wrap}
+}
+@media (max-width:599px){
+  .g-h em{white-space:nowrap}
+}
+
+/* Kalendář */
+@media (max-width:1199px){
+  .cd-day{grid-template-columns:minmax(0,1fr) 280px}
+}
+@media (max-width:599px){
+  .cal-bar{flex-wrap:wrap;row-gap:8px}
+  .cal-label{flex:1;margin-left:0;font-size:16px}
+  .cal-bar>.spacer{display:none}
+  .cal-bar>.btn:not(:first-child){width:40px;height:40px;padding:0;justify-content:center;font-size:0;gap:0}
+  .cal-bar .seg-l{flex:1 1 100%;display:flex;order:5}
+  .cal-bar .seg-l a,.cal-bar .seg-l button{flex:1;justify-content:center}
+  .cd-day{grid-template-columns:minmax(0,1fr)}
+  .wbody{max-height:none}
+}
+
+/* Docházka */
+@media (max-width:1199px){
+  .grid:has(>.tbl-card>.att-days){grid-template-columns:minmax(0,1fr)!important}
+  .grid:has(>.tbl-card>.att-days)>div:last-child{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+  .grid:has(>.tbl-card>.att-days)>div:last-child>.card{margin:0}
+}
+@media (max-width:599px){
+  .grid.g4:has(>.stat){grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .stat{padding:16px}
+  .stat span{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat b{font-size:18px;line-height:24px;white-space:nowrap}
+  .stat .small{font-size:10px;line-height:16px}
+  .grid:has(>.tbl-card>.att-days)>div:last-child{grid-template-columns:minmax(0,1fr)}
+  /* Dny jako seznam: den, čas, saldo; poznámka pod tím */
+  .tbl-card:has(.att-days){overflow:visible}
+  .att-days,.att-days tbody{display:block}
+  .att-days thead{display:none}
+  .att-days tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto 72px 40px;grid-template-areas:"d t s a" "n n n a";column-gap:8px;align-items:center;padding:8px 8px 8px 16px;border-bottom:1px solid var(--n100)}
+  .att-days tbody tr:last-child{border-bottom:0}
+  .att-days tbody tr:nth-child(even){background:#f7f7f7}.att-days tbody tr.att-today{background:var(--n50)}
+  .att-days td{display:block;padding:0!important;height:auto;background:none!important;white-space:nowrap}
+  .att-days td:nth-child(1){grid-area:d}
+  .att-days td:nth-child(2){grid-area:t}
+  .att-days td:nth-child(3){display:none}
+  .att-days td:nth-child(4){grid-area:s;text-align:right}
+  .att-days td:nth-child(5){grid-area:n;font-size:12px;line-height:16px;white-space:normal;width:auto}
+  .att-days td:nth-child(5):empty{display:none}
+  .att-days td:nth-child(6){grid-area:a;display:flex;justify-content:center}
+  .att-days tbody tr:has(td:nth-child(6) .btn){grid-template-areas:"d t s s" "n n a a";row-gap:8px}
+  .att-days td:nth-child(6):has(.btn){justify-content:flex-end}
+}
+
+/* Položky z hlavičky, které se na mobilu do hlavičky nevejdou */
+.nav-m{display:none}
+@media (max-width:599px){.nav-m{display:block}}
+
+/* ===== Ostatní stránky (13. 11. 2026, kontrola všech stránek na 1100, 768 a 390 px) ===== */
+@media (max-width:1199px){
+  /* Spodní lišty formulářů a pruh záložek detailu: okraje podle šířky obsahu */
+  .form-foot{margin:24px -24px -32px;padding:16px 24px}
+  .det-bar{margin:0 -24px 24px;padding:0 24px}
+  /* Docházka, měsíční přehled: matice se posouvá do strany, legenda se zalamuje */
+  .tbl-card:has(>.matrix),.card:has(>.matrix),div:has(>table.matrix){overflow-x:auto}
+  table.matrix{min-width:960px}
+  .row:has(>.lg){flex-wrap:wrap;row-gap:8px}
+  .lg{display:flex;flex-wrap:wrap;gap:8px 16px}
+  /* Obchod, detail: jeden sloupec, fáze se posouvají do strany */
+  .dl-cols{grid-template-columns:minmax(0,1fr)}
+  .dl-steps{overflow-x:auto;scrollbar-width:none}
+  .dl-steps::-webkit-scrollbar{display:none}
+  .dl-step{flex:1 0 auto;white-space:nowrap}
+  /* Dokumenty: filtry pod sebou nemačkají, tabulka v detailu kontaktu se posouvá */
+  .doc-fb .sel-m,.doc-fb select.inp.sel-m{flex:1 1 128px;width:auto;min-width:120px}
+  .doc-fb .spacer{display:none}
+  .doc-tbl th:nth-child(5),.doc-tbl td:nth-child(5){display:none}
+
+  /* Nápověda */
+  .hp-cats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Úkol, editace: spolupracovníci ve třech sloupcích */
+  .co-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  /* Přehled: tabulka týmu se posouvá do strany */
+  table.team-t{display:block;overflow-x:auto;scrollbar-width:none}
+  table.team-t::-webkit-scrollbar{display:none}
+  /* KPI dlaždice: na tabletu čtyři vedle sebe */
+  .grid.g4:has(>.stat),.grid.g4:has(>.tile-t){grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:599px){
+  .form-foot{margin:16px -16px -24px;padding:16px}
+  .det-bar{margin:0 -16px 16px;padding:0 16px}
+  /* Nadpis stránky: akce se zalomí pod nadpis */
+  .page-head{flex-wrap:wrap;row-gap:16px}
+  .page-head>.acts{flex-wrap:wrap;gap:8px;max-width:100%}
+  .page-head>.acts:has(>input.inp),.page-head>.acts:has(>.seg){flex:1 1 100%;margin-left:0}
+  .page-head>.acts>input.inp{flex:1 1 160px;min-width:0;width:auto!important;height:40px!important}
+  .page-head>.acts>.seg{flex:none}
+  .page-head>h1{flex:1 1 0;min-width:0}
+  .card-head .r,.card-head>.row{flex-wrap:wrap;gap:8px}
+  .grid.g4:has(>.stat),.grid.g4:has(>.tile-t){grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Nastavení: menu nastavení nad obsahem */
+  .set-wrap{grid-template-columns:minmax(0,1fr);gap:16px}
+  .set-nav{position:static}
+  .set-mx table.tbl th,.set-mx table.tbl td{padding-left:8px;padding-right:8px}
+  /* Nápověda */
+  .hp-hero{padding:24px 16px}
+  .hp-cats{grid-template-columns:minmax(0,1fr);gap:8px}
+  .hp-sup{flex-wrap:wrap;gap:16px}
+  .hp-sup>.btn{flex:1 1 100%;justify-content:center}
+  /* Dokumenty: kategorie jako vodorovný pás, tabulka jako seznam */
+  .doc-lay{grid-template-columns:minmax(0,1fr)}
+  .doc-nav{position:static;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:8px;margin:0 -16px;border-radius:0;background:none}
+  .doc-nav::-webkit-scrollbar{display:none}
+  .doc-nav button{width:auto;flex:none;height:32px;background:#fff;border:1px solid var(--n100);white-space:nowrap}
+  .doc-nav button.on{border-color:var(--teal)}
+  .doc-fb .seg,.doc-fb>.small.mute{display:none}
+  .tbl-card:has(>.doc-mt){overflow:visible;background:none}
+  .doc-mt,.doc-mt tbody{display:block}
+  .doc-mt thead{display:none}
+  .doc-mt tbody tr{display:grid;grid-template-columns:40px minmax(0,1fr) auto 40px;grid-template-areas:"cb n n more" "cb c s more";align-items:center;column-gap:8px;row-gap:4px;padding:12px 8px 12px 16px;background:#fff;border-bottom:1px solid var(--n100)}
+  .doc-mt tbody tr:first-child{border-radius:8px 8px 0 0}.doc-mt tbody tr:last-child{border-radius:0 0 8px 8px;border-bottom:0}
+  .doc-mt td{display:none;padding:0!important;height:auto!important;background:none!important}
+  .doc-mt td:nth-child(1){display:block;grid-area:cb}
+  .doc-mt td:nth-child(2){display:block;grid-area:n;min-width:0}
+  .doc-mt td:nth-child(3){display:block;grid-area:c;font-size:12px;line-height:16px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:48px!important}
+  .doc-mt td:nth-child(4){display:block;grid-area:s}
+  .doc-mt td:last-child{display:flex;grid-area:more;justify-content:center}
+  .doc-mt .doc-nt{max-width:none}
+  .doc-mt .doc-t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+  .doc-v{grid-template-columns:minmax(0,1fr)}
+  .doc-page{display:none}
+  .doc-side{min-width:0}
+  .doc-f{overflow-x:auto;scrollbar-width:none;max-width:100%;flex-wrap:nowrap}
+  .doc-f::-webkit-scrollbar{display:none}
+  .doc-f button{flex:none}
+  /* Obchod, detail */
+  .dl-step{padding:0 16px 0 24px}
+  /* Úkol, editace: spolupracovníci ve dvou sloupcích */
+  .co-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* Docházka, tým dnes: stav pod jménem */
+  /* Organizace: ikona budovy odsazená od názvu */
+  .tbl.frozen td.c-name .row{display:inline-flex;gap:8px;vertical-align:middle;max-width:100%}
+  /* Detail kontaktu: na jiných záložkách než Základní údaje jen kontakty a aktivity */
+  .wrap:has(.det-bar .tabs>.tab:first-child:not(.on)) .c-sum .cs-more{display:none}
+}
+@media (max-width:599px){
+  .att-days td:nth-child(6){width:auto!important}
+  .grid:has(>section.card>.person){grid-template-columns:minmax(0,1fr)!important}
+  .person{flex-wrap:wrap;row-gap:4px}
+  .ent-head>.btn{flex:none}
+}
+@media (max-width:1199px){
+  .dl-next{flex-wrap:wrap;gap:8px}
+  .dl-next>p.spacer{flex:1 1 100%}
+}
+@media (max-width:599px){
+  .page-head>h1{flex:0 1 auto}
+  .grid.g3:has(>.stat){grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .grid.g3>.stat{padding:16px 8px 16px 16px}
+  /* Dokumenty v detailu kontaktu: seznam s názvem a stavem */
+  .doc-tbl{min-width:0}
+  .doc-tbl,.doc-tbl tbody{display:block}
+  .doc-tbl thead{display:none}
+  .doc-tbl tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--n100);background:none!important}
+  .doc-tbl td{display:none;padding:0!important;height:auto!important}
+  .doc-tbl td:nth-child(1){display:block;min-width:0}
+  .doc-tbl td:nth-child(3){display:block}
+  .doc-tbl .doc-t{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Uživatelé: seznam se jménem a stavem účtu */
+  .tbl-card:has(>.tbl.frozen1){overflow:visible}
+  .tbl.frozen1,.tbl.frozen1 tbody{display:block}
+  .tbl.frozen1 thead{display:none}
+  .tbl.frozen1 tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto 40px;align-items:center;gap:8px;padding:8px 8px 8px 16px;border-bottom:1px solid var(--n100)}
+  .tbl.frozen1 tbody tr:last-child{border-bottom:0}
+  .tbl.frozen1 td{display:none;padding:0!important;height:auto;position:static!important;box-shadow:none!important;background:none!important}
+  .tbl.frozen1 td:nth-child(1),.tbl.frozen1 td:nth-child(2){display:block;min-width:0}
+  .tbl.frozen1 td:last-child{display:flex;justify-content:center;width:auto!important}
+  .tbl.frozen1 td:nth-child(1) .who{min-width:0}
+}
+@media (max-width:899px) and (min-width:600px){
+  .grid.g4:has(>.stat){grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:1199px){
+  .doc-fb{flex-wrap:wrap!important}
+}
+@media (max-width:767px){
+  .ent-acts{flex-wrap:wrap;row-gap:8px}
+  .card-head .r{flex-wrap:wrap;row-gap:8px}
+  .page-head{flex-wrap:wrap;row-gap:16px}
+  .page-head>.acts{flex-wrap:wrap;max-width:100%}
+  .grid:has(>section.card>.person){grid-template-columns:minmax(0,1fr)!important}
+  .doc-tbl th:nth-child(2),.doc-tbl td:nth-child(2),.doc-tbl th:nth-child(4),.doc-tbl td:nth-child(4){display:none}
+}
+@media (max-width:599px){
+  .doc-fb .sel-m,.doc-fb select.inp.sel-m{min-width:0}
+}
+
+/* Kontrola 14. 11. 2026: nálezy z auditu na šířkách 1440–320 px */
+@media (max-width:1199px){
+  /* Narozeniny a svátky (tablet): e-mail se nevešel a překrýval správce, zůstává telefon */
+  .cel-t td:has(a[href^="mailto"]){display:none}
+}
+@media (max-width:599px){
+  /* Hlavička profilu kolegy a detailu obchodu: tři tečky vpravo nahoře, ne samotné na dalším řádku */
+  .ent-head:has(>.more)>div:not(.ent-acts){padding-right:40px}
+  .ent-head>.more{position:absolute;top:0;right:0}
+  /* Hodnocení, stav a vztah kontaktu se zalomí, kolečko hodnocení se nemačká */
+  .ent-meta{flex-wrap:wrap;row-gap:4px}
+  .ent-meta>.rate{flex:none}
+  /* Uživatelé: dlouhé jméno se zkrátí trojtečkou, nepřekrývá stav účtu */
+  .tbl.frozen1 td:nth-child(1) .who{display:block;overflow:hidden;text-overflow:ellipsis}
+  .tbl.frozen1 td:nth-child(1) .who>.av{display:inline-grid;vertical-align:middle;margin-right:8px}
+  /* Časová osa a historie změn: hlavička záznamu se zalomí, datum nevyjede z karty */
+  .tl-h{flex-wrap:wrap;row-gap:4px}
+  .tl>.small.nowrap{white-space:normal;max-width:48px;text-align:right}
+  /* Kalendář, měsíc: v úzké buňce jen „+8“, celý text je v okně dne */
+  .ev-more .evm-l{display:none}
+  /* Kalendář, seznam: hledání a obě tlačítka v jednom řádku */
+  .cal-bar>.cd-q{flex:1 1 0;min-width:0;width:auto}
+}
+@media (max-width:399px){
+  /* Velmi úzký mobil: hledání nad přepínači a filtry */
+  .page-head>.acts>input.inp,.page-head.list-h .acts:has(>.seg,>select)>input.inp{flex:1 1 100%}
+  /* Tři dlaždice: dvě vedle sebe, třetí přes celou šířku */
+  .grid.g3:has(>.stat){grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid.g3>.stat:last-child:nth-child(odd){grid-column:1/-1}
+  /* Dokumenty: kontakt na samostatném řádku pod názvem, stav pod ním */
+  .doc-mt tbody tr{grid-template-columns:40px minmax(0,1fr) 40px;grid-template-areas:"cb n more" "cb c more" "cb s more"}
+  .doc-mt td:nth-child(4){justify-self:start;padding-left:48px!important}
+}
+@media (max-width:767px){
+  /* Narozeniny a svátky: řádky jako seznam */
+  .cel-t,.cel-t tbody{display:block}
+  .cel-t tr{display:grid;grid-template-columns:40px minmax(0,1fr) auto;grid-template-areas:"cb n o" "cb p o";column-gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--n100)}
+  .cel-t td{display:none;border:0!important;padding:0!important}
+  .cel-t td:nth-child(1){display:block;grid-area:cb;width:auto!important}
+  .cel-t td:nth-child(2){display:block;grid-area:n}
+  .cel-t td:has(a[href^="mailto"]){display:none}
+  .cel-t td:has(>.who-btn),.cel-t td:has(.av){display:block;grid-area:o}
+  .cel-t td.mute:not(:has(a)){display:block;grid-area:p;font-size:12px;line-height:16px}
+  .cel-t td:last-child:has(.badge){display:block;grid-area:o}
+  .card-head>label.row{flex:none}
+}
+@media (max-width:767px) and (min-width:600px){
+  /* Úzký tablet: hledání v hlavičce jen jako lupa, jinak by se zmáčklo */
+  .search{display:none}
+  .head-search{display:flex;margin-left:auto}.head-search svg{width:20px;height:20px}
+}
+@media (max-width:599px){
+  /* Historie změn: řádek se jménem a typem změny se zalomí */
+  .tl .spacer{min-width:0}
+  .tl .spacer>.row{flex-wrap:wrap;row-gap:4px}
+}

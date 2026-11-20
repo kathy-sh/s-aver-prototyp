@@ -1,0 +1,181 @@
+/* 5. kolo – styly modulu Kalendář a Obchod. Načítá se po styles.css. */
+
+/* ---------- Kalendář ---------- */
+.cal-bar{display:flex;align-items:center;gap:8px;margin:0 0 16px;flex-wrap:wrap}
+.cal-label{font:600 18px/24px Poppins;margin-left:8px}
+.cd-q{width:280px;height:32px}
+.cd-n{display:inline-grid;place-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--teal-a);color:#fff;font-size:11px;line-height:16px;font-weight:600}
+.cal-bar .btn svg{width:10px;height:6px}
+.cal-bar .btn .ic svg{width:16px;height:16px}
+.cd-views{margin-left:8px}
+.seg-l a{display:inline-flex;align-items:center;height:28px;padding:0 16px;border-radius:6px;font-size:12px;color:var(--n700);text-decoration:none}
+.seg-l a:hover{color:var(--n900);text-decoration:none}
+.seg-l a.on{background:#fff;color:var(--teal-a);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.seg-l button:not(.on):hover{color:var(--n900)}
+
+/* Tečka typu = legenda i barva v kalendáři */
+.evd{width:8px;height:8px;border-radius:50%;background:var(--kf,var(--n500));flex:none;display:inline-block}
+.evd-t{background:transparent;box-shadow:inset 0 0 0 1.5px var(--n500);border-radius:2px}
+.evd-c{background:var(--cel,#a21caf)}
+.cal-lg{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:16px;font-size:12px;line-height:16px;color:var(--n700)}
+.cal-lg>span{display:inline-flex;align-items:center;gap:8px}
+
+/* Měsíc */
+.cal-m{border:0}
+.mhead>div{padding:8px;font-weight:500}
+.mhead>div.we{color:var(--n400)}
+.mday{min-height:120px;padding:4px 4px 8px;gap:2px;transition:background .12s}
+.mday.we{background:#fafbfb}
+.mday:hover{background:var(--n50)}
+.mday.out{background:#fcfcfc}
+.mday.out>*:not(.mh){opacity:.6}
+.mh{height:28px;padding:0 0 0 2px}
+.mday .mn{display:inline-grid;place-content:center;min-width:24px;height:24px;padding:0 4px;border-radius:12px;font:600 12px/16px Poppins;color:var(--n900);cursor:pointer}
+.mday .mn:hover{background:var(--n200)}
+.mday.out .mn{color:var(--n400);opacity:1}
+.mday.today .mn{background:var(--teal-a);color:#fff;margin-left:0;width:auto}
+.mday.today .mn:hover{background:var(--dark)}
+.mday.today{box-shadow:inset 0 0 0 1px var(--teal)}
+.madd{width:24px;height:24px;border-radius:6px}
+.madd:hover{background:var(--n200)}
+.madd svg{width:12px;height:12px}
+
+/* Události jako řádky: tečka typu, čas, název. Bez sytého pozadí. */
+.ev.evc{background:transparent;color:var(--n900);gap:4px;padding:2px 4px;border-radius:4px}
+.ev.evc:hover{background:var(--n100);filter:none}
+.ev.evc .ev-t{font-weight:600;color:var(--n700)}
+.ev.evc.ev-past{color:var(--n500);background:transparent}
+.ev.evc.ev-past .ev-t{color:var(--n500)}
+.ev.evc.ev-past .evd{opacity:.45}
+.ev.evc.ev-no{background:transparent;color:var(--n500)}
+.ev.evc.ev-no .evd{background:var(--red)}
+.ev.evc.ev-no .ev-n{text-decoration:line-through}
+.ev.evc:hover.ev-past,.ev.evc:hover.ev-no{background:var(--n100)}
+.ev-av{margin-left:auto;flex:none;font-size:10px;line-height:14px;padding:0 4px;border-radius:4px;background:var(--n100);color:var(--n700);font-weight:600}
+.ev-task{background:#fff}
+.ev-task:hover{background:var(--n100)}
+.ev-more{border-radius:4px;padding:2px 4px;font-weight:500}
+.ev-more:hover{background:var(--teal-bg);text-decoration:none}
+
+/* Týden a den */
+.whead{border-bottom:1px solid var(--n200)}
+.wday{gap:2px;cursor:pointer;transition:background .12s}
+.wday:hover{background:var(--n50)}
+.wday.we{color:var(--n400)}
+.wday.we b{color:var(--n500)}
+.wday.today b{background:var(--teal-a);color:#fff}
+.wtop-l{font-size:11px;line-height:16px;color:var(--n500);text-align:right;padding:8px 8px 0 0}
+.wtopc{text-align:left;padding:4px}
+.wtopc.we,.wcol.we{background:#fafbfb}
+.wcol.today{background:#f7fcfc}
+.wslot{cursor:pointer;transition:background .12s}
+.wslot:hover{background:var(--teal-bg)}
+.ev-b{border-radius:6px}
+.ev-b[class*="k-"]:hover{filter:brightness(.96)}
+.wbody{max-height:calc(100vh - 320px);overflow-y:auto}
+.cd-day{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:16px;align-items:start}
+.cd-day .cal-w{margin:0}
+.cd-agenda{margin:0}
+.cd-ag{display:flex;align-items:flex-start;gap:8px;width:100%;padding:8px;margin:0 -8px;width:calc(100% + 16px);border-radius:8px;text-align:left;transition:background .12s}
+.cd-ag:hover{background:var(--n50)}
+.cd-ag .evd{margin-top:6px}
+.cd-ag-t{width:40px;flex:none;font-weight:600;font-size:14px;line-height:20px}
+.cd-ag .spacer{display:flex;flex-direction:column;min-width:0}
+.cd-ag.past{color:var(--n500)}.cd-ag.past .evd{opacity:.45}
+
+/* Seznam */
+.cd-per{gap:8px;margin-bottom:16px}
+.cd-tt{gap:8px;flex-wrap:nowrap}
+
+/* Popover detailu události a filtrů */
+.evp{padding:8px}
+.evp-h{display:flex;align-items:center;gap:8px;min-height:32px}
+.evp-h .more{width:32px;height:32px}
+.evp-t{font:600 16px/24px Poppins;margin:4px 0 8px}
+.evp-r{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:20px;margin-top:8px;color:var(--n900)}
+.evp-r>.ic{color:var(--n500);margin-top:2px;flex:none}
+.evp-st{display:flex;margin-top:16px;width:100%}
+.evp-st button{flex:1;height:28px;padding:0 8px}
+.evp-st button:not(.on):hover{color:var(--n900);background:rgba(255,255,255,.6)}
+.cd-f{padding:4px}
+.cd-f .over{padding:4px 8px}
+.cd-fi{gap:8px;padding:8px;border-radius:8px;cursor:pointer;font-size:14px}
+.cd-fi:hover{background:var(--n50)}
+.cd-f hr{margin:4px 0}
+
+/* ---------- Obchod ---------- */
+.dl-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.dl-bar .inp{height:32px}
+.dl-bar select.inp{width:auto;min-width:160px}
+.dl-bar .dl-q{width:280px}
+.kanban{gap:16px}
+.kcol{padding:8px;min-height:240px;gap:8px;border:1px solid transparent;transition:border-color .12s,background .12s}
+.kcol.drop-on{border-color:var(--teal);background:var(--n50)}
+.kh{justify-content:space-between;padding:8px 8px 0}
+.kh b{font:600 14px/20px Poppins}
+.kh .cnt-b{font-size:12px;line-height:16px;color:var(--n500);background:var(--n100);border-radius:8px;padding:0 8px}
+.kh-sum{padding:0 8px 8px;margin:0;font-weight:600;color:var(--n700);border-bottom:1px solid var(--n100)}
+.dcard{background:#fff;border:1px solid var(--n200);padding:8px 16px;gap:4px;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.dcard:hover{border-color:var(--teal);box-shadow:var(--shadow)}
+.dcard:active{cursor:grabbing}
+.dcard .dc-t{font:500 14px/20px Poppins;color:var(--n900);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dcard .dc-c{font-size:12px;line-height:16px;color:var(--n500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dcard .dc-v{display:flex;align-items:center;gap:8px;margin-top:4px}
+.dcard .dc-v b{font:600 14px/20px Poppins}
+.dcard .av{width:24px;height:24px;font-size:10px}
+.k-more{display:block;text-align:center;font-size:12px;line-height:16px;padding:8px;border-radius:8px;color:var(--teal-a)}
+.k-more:hover{background:var(--teal-bg);text-decoration:none}
+.kz{border:2px dashed currentColor;box-shadow:var(--shadow)}
+.kz.drop-on{background:var(--n50)}
+
+.tbl .cbc{width:56px}
+.dl-sel td{background:var(--teal-bg)!important}
+.bulk .btn.ghost{color:#fff;border-color:rgba(255,255,255,.5);background:transparent}
+.bulk .btn.ghost:hover{background:rgba(255,255,255,.12)}
+.bulk .btn.lt{background:#fff;color:var(--dark);border-color:#fff}
+.bulk .btn.lt:hover{background:var(--n100)}
+
+/* Detail obchodu */
+.dl-steps{display:flex;gap:4px;margin-bottom:16px}
+.dl-step{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;background:#fff;color:var(--n500);font-size:12px;line-height:16px;font-weight:500;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%);transition:background .12s,color .12s}
+.dl-step:first-child{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);border-radius:8px 0 0 8px}
+.dl-step:last-child{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,12px 50%);border-radius:0 8px 8px 0}
+.dl-step.done{background:var(--teal-bg);color:var(--dark)}
+.dl-step.on{background:var(--teal-a);color:#fff;font-weight:600}
+button.dl-step:not(.on):hover{background:var(--n100);color:var(--n900)}
+button.dl-step.done:hover{background:#cfe9eb}
+.dl-cols{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:16px;align-items:start}
+.dl-cols>div>.card{margin-bottom:16px}
+.dl-next{display:flex;align-items:center;gap:16px}
+.dl-next p{font-size:16px;line-height:24px;font-weight:500}
+.dl-next.empty-n p{color:var(--n500);font-weight:400}
+.dl-c-row{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;line-height:20px}
+.dl-c-row .ic{color:var(--n500)}
+.dl-log{display:flex;gap:8px;padding:8px 0;border-top:1px solid var(--n100);font-size:14px;line-height:20px}
+.dl-log:first-of-type{border-top:0}
+
+/* Záložka Obchod v detailu kontaktu: řádek tabulky klikací přes celou šíři */
+.cd-deals td .cdd-sub{display:block;font-size:12px;line-height:16px;color:var(--n500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}
+.cd-deals td{vertical-align:middle}
+.dl-bk{display:flex;flex-direction:column;gap:4px;margin-top:16px}
+.dl-bk-i{display:flex;align-items:center;gap:16px;width:100%;padding:16px;border-radius:8px;border:1px solid var(--n200);text-align:left;font-size:14px;line-height:20px;color:var(--n900);transition:border-color .12s,background .12s}
+.dl-bk-i:hover{border-color:var(--teal);background:var(--n50)}
+.dl-bk-i>svg{width:8px;height:12px;color:var(--n500)}
+.dl-bk-i.dng{color:var(--red)}
+.cal-bar .cd-q{width:280px;flex:none}
+/* Narozeniny a svátky decentně: barevná jen ikona */
+.ev.ev-bd{background:transparent;color:var(--n900)}
+.ev.ev-bd svg{color:var(--cel,#a21caf)}
+.ev.ev-bd:hover{background:var(--n100)}
+.b-amb{background:var(--amber-bg);color:var(--amber)}
+.cd-ml{display:flex;flex-direction:column;gap:2px;margin-top:8px;max-height:360px;overflow-y:auto}
+.dcard .dc-v b{white-space:nowrap;font-size:13px}
+.dcard .dc-v{flex-wrap:nowrap;gap:4px}
+.dcard .dc-v .small{font-size:11px}
+/* 6. kolo: drobnosti po uživatelské revizi */
+.k-empty{margin-top:8px;padding:16px 8px;border:1px dashed var(--n200);border-radius:8px;text-align:center;font-size:12px;line-height:16px;color:var(--n500)}
+.wtop-l{white-space:nowrap;font-size:10px}
+.k-combo::-webkit-calendar-picker-indicator{opacity:.6}
+.k-coq{margin:8px 0;max-width:320px;height:32px}
+.k-co{max-height:200px;overflow:auto;padding:4px 0}
+.field .co-list.k-co label.row[hidden]{display:none}

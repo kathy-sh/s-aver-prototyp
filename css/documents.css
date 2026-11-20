@@ -1,0 +1,80 @@
+/* 5. kolo – styly modulu Dokumenty. Načítá se po styles.css. */
+
+/* Ikona souboru: list s ohnutým rohem a barevným štítkem typu */
+.fi{display:inline-flex;flex:none;color:var(--n500)}
+.fi svg{display:block;width:100%;height:100%;overflow:visible}
+.fi .pg{fill:#fff;stroke:var(--n200);stroke-width:1.5}
+.fi .fd{fill:none;stroke:var(--n200);stroke-width:1.5}
+.fi .ln{fill:none;stroke:var(--n200);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fi .bd{fill:currentColor}
+.fi text{fill:#fff;font:600 7.5px Poppins,sans-serif;letter-spacing:.02em}
+.fi-pdf{color:var(--red)}.fi-doc{color:var(--blue)}.fi-xls{color:var(--green)}.fi-img{color:var(--violet)}.fi-oth{color:var(--n500)}
+.fi-s{width:24px;height:30px}.fi-m{width:32px;height:40px}.fi-l{width:48px;height:60px}
+.ent-head>.fi-l{margin-right:8px}
+
+/* Náhled v kartách: velká ikona na šedém pozadí */
+.dthumb2{position:relative;height:120px;background:var(--n100);display:grid;place-content:center}
+.dthumb2 .fi-l{width:56px;height:70px}
+.dt-lock{position:absolute;top:8px;right:8px;display:grid;place-content:center;width:24px;height:24px;border-radius:6px;background:#fff;color:var(--n500)}
+.doc-grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.doc-c{transition:box-shadow .12s}
+.doc-c:hover{box-shadow:inset 0 0 0 1px var(--teal),var(--shadow)}
+.doc-c:hover .doc-b .med{color:var(--teal-a)}
+
+/* Modul: typy vlevo, filtry a tabulka vpravo */
+.doc-lay{display:grid;grid-template-columns:216px minmax(0,1fr);gap:16px;align-items:start}
+.doc-nav{padding:8px;position:sticky;top:16px}
+.doc-nav button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:40px;padding:0 16px;border-radius:8px;text-align:left;color:var(--n700)}
+.doc-nav button:hover{background:var(--n50);color:var(--n900)}
+.doc-nav button.on{background:var(--teal-bg);color:var(--teal-a);font-weight:500}
+.doc-nav .n{font-size:12px;color:var(--n500);font-weight:400}
+.doc-nav button.on .n{color:var(--teal-a)}
+.doc-main{min-width:0}
+.doc-fb{gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.doc-fb{flex-wrap:nowrap}.doc-fb select.inp.sel-m{flex:1 1 160px;width:auto;min-width:0;max-width:208px}.doc-fb .seg{flex:none}.doc-fb>.small{white-space:nowrap}
+.doc-mt td{height:56px}
+.doc-mt .doc-nt{max-width:420px}
+.doc-mt tr:hover .doc-nt .med,.doc-tbl tr:hover .doc-nt .med{color:var(--teal-a)}
+.doc-mt a,.doc-tbl a{color:inherit}.doc-mt a:hover{color:var(--teal-a)}
+.doc-nt .sens-lock{display:inline-flex;margin-left:8px;color:var(--n500);vertical-align:middle}
+.tile-t b.blu,.blu{color:var(--blue)}
+
+/* Záložka u kontaktu */
+.doc-n{gap:16px}
+.doc-more{padding:16px 0 0;text-align:center}
+.doc-todo-r{margin:0 -24px;padding:16px 24px;cursor:pointer}
+.doc-todo-r:hover{background:var(--teal-bg)}
+.doc-todo-r:hover .doc-todo-t .med{color:var(--teal-a)}
+.doc-todo-t{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* Karta u obchodu a související dokumenty */
+.doc-rows{margin:0 -24px}
+.doc-row{display:flex;align-items:center;gap:16px;padding:8px 24px;color:inherit;border-top:1px solid var(--n100)}
+.doc-row:hover{background:var(--teal-bg);text-decoration:none}
+.doc-row:hover .med{color:var(--teal-a)}
+.doc-rel{margin:0 -8px;padding:8px;border-radius:8px;border-bottom:0;gap:16px}
+.doc-rel:hover{background:var(--teal-bg)}
+.doc-rel:hover .med{color:var(--teal-a)}
+.doc-pick:hover{background:var(--teal-bg)}
+
+/* Okna s volbami (podpis, hromadné akce) */
+.sg-opt{display:flex;align-items:center;gap:16px;width:100%;padding:8px;border-radius:8px;text-align:left;border:0;background:none;color:var(--n900);cursor:pointer}
+.sg-opt+.sg-opt{margin-top:0}
+.sg-opt:hover{background:var(--n50)}.sg-opt:hover .med{color:var(--teal-a)}.sg-opt:hover>.ic:last-child{color:var(--teal-a)}
+.sg-opt>.ic:last-child{color:var(--n400)}
+.sg-opt.dng .sg-i{color:var(--red);background:var(--red-bg)}.sg-opt.dng:hover .med{color:var(--red)}
+.sg-i{display:grid;place-content:center;width:32px;height:32px;border-radius:50%;background:var(--teal-bg);color:var(--teal-a);flex:none}.sg-i .ic{width:16px;height:16px}
+.sg-t{flex:1;display:flex;flex-direction:column;min-width:0}
+.sg-me{gap:8px;cursor:pointer}
+.sg-r{display:flex;align-items:center;gap:16px;padding:8px 0;border-top:1px solid var(--n100)}
+.sg-r:first-child{border-top:0}
+.sg-r .sg-ch{width:112px;height:32px;padding:0 8px;font-size:12px}
+.sg-n{display:grid;place-content:center;width:24px;height:24px;border-radius:50%;background:var(--n100);font:600 12px/16px Poppins;color:var(--n700);flex:none}
+.sg-n:empty{background:none}
+.sg-prog{height:4px;border-radius:2px;background:var(--n100);margin-bottom:8px;overflow:hidden}
+.sg-prog i{display:block;height:100%;background:var(--green)}
+.dng-l{color:var(--red)}.dng-l:hover{color:var(--red)}
+.sg-r .doc-t .small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal .sg-opt{margin-left:-8px;width:calc(100% + 16px)}
+
+.d-pick{max-height:320px;overflow:auto;margin-top:8px}
