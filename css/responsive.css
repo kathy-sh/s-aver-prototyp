@@ -88,7 +88,7 @@
   .tbl.frozen tbody tr.sel{background:var(--teal-bg)}
   .tbl.frozen td:first-child{display:block;grid-area:cb}
   .tbl.frozen td.c-name{display:block;grid-area:n;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .tbl.frozen td.c-name .row{display:inline;font-weight:600}
+  .tbl.frozen td.c-name .row{display:inline-flex;gap:8px;vertical-align:middle;max-width:100%;font-weight:600}
   .tbl.frozen td[data-k="status"]{display:block;grid-area:s;font-size:12px;line-height:16px}
   .tbl.frozen td[data-k="rel"]{display:block;grid-area:r;font-size:12px;line-height:16px;color:var(--n700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tbl.frozen td[data-k="rel"]::before{content:"·";margin:0 8px 0 0;color:var(--n400)}
@@ -471,4 +471,13 @@
 @media (max-width:599px){
   .ph-edit{flex-wrap:wrap}
   .ph-edit #ph-prev,.ph-edit #uph-prev{flex:1 1 100%;margin:0 0 8px}
+}
+
+/* Nastavení na tabletu na výšku (600–899 px): menu nad obsahem, položky skupiny ve 3 sloupcích, obsah přes celou šířku (20. 11. 2026) */
+@media (max-width:899px) and (min-width:600px){
+  .set-wrap{grid-template-columns:minmax(0,1fr);gap:16px}
+  .set-nav{position:static;max-height:none}
+  .set-nav .set-search{max-width:none}
+  .set-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:8px}
+  .set-g .set-gh{grid-column:1/-1}
 }

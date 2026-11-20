@@ -76,3 +76,7 @@
   .tm-team tbody tr{grid-template-areas:"n n" "z b";row-gap:4px;padding:12px 16px}
   .tm-team td:nth-child(4) .mute:only-child{display:inline;color:var(--n500)}
 }
+/* Můj tým na tabletu: bez sloupce Pozice, aby byl vidět zástup a pole s plánem */
+@media (max-width:1199px){
+  .tm-team th:nth-child(2),.tm-team td:nth-child(2),.tm-plan th:nth-child(2),.tm-plan td:nth-child(2){display:none}
+}
