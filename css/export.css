@@ -41,3 +41,38 @@
 .x-grid>.card{margin:0}
 .x-link{display:inline-flex;align-items:center;gap:8px}
 .tm-lock{display:inline-flex;color:var(--n400)}
+/* Můj tým na mobilu: důležité sloupce bez posouvání do strany (20. 11. 2026) */
+@media (max-width:599px){
+  .tm-perm th:not(:first-child),.tm-perm td:not(:first-child){width:88px;padding-left:4px!important;padding-right:4px!important}
+  .tm-plan th:nth-child(2),.tm-plan td:nth-child(2){display:none}
+  .tm-plan input{width:112px}
+  .tm-team th:nth-child(2),.tm-team td:nth-child(2),.tm-team th:nth-child(3),.tm-team td:nth-child(3){display:none}
+}
+@media (max-width:599px){
+  .tm-perm td:first-child,.tm-perm th:first-child{white-space:normal;padding-right:8px!important}
+  .tm-perm th:not(:first-child){font-size:10px}
+  .tm-team,.tm-team tbody{display:block}
+  .tm-team thead{display:none}
+  .tm-team tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n b" "z b";align-items:center;column-gap:8px;padding:8px 16px;border-bottom:1px solid var(--n100)}
+  .tm-team td{padding:0!important;height:auto!important;background:none!important}
+  .tm-team td:nth-child(1){grid-area:n}
+  .tm-team td:nth-child(4){grid-area:z;font-size:12px;line-height:16px;padding-left:40px!important;white-space:normal}
+  .tm-team td:nth-child(4) .mute:only-child{display:none}
+  .tm-team td:nth-child(4)>.small{display:inline!important;margin-left:4px}
+  .tm-team td:nth-child(5){grid-area:b}
+}
+@media (max-width:599px){
+  .tm-team td:nth-child(1){min-width:0;overflow:hidden}
+  .tm-team td:nth-child(1) .med{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .tm-team td:nth-child(1)>a{min-width:0;max-width:100%}
+  .tm-plan{table-layout:fixed;width:100%}
+  .tm-plan th:last-child,.tm-plan td:last-child{width:128px}
+  .tm-plan td:first-child .row{min-width:0}
+  .tm-plan td:first-child .med{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .tm-plan td:first-child,.tm-plan th:first-child{padding-right:8px!important}
+  .tm-plan td:last-child,.tm-plan th:last-child{padding-left:0!important}
+}
+@media (max-width:599px){
+  .tm-team tbody tr{grid-template-areas:"n n" "z b";row-gap:4px;padding:12px 16px}
+  .tm-team td:nth-child(4) .mute:only-child{display:inline;color:var(--n500)}
+}

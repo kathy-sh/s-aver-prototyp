@@ -355,7 +355,7 @@
   .doc-tbl,.doc-tbl tbody{display:block}
   .doc-tbl thead{display:none}
   .doc-tbl tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--n100);background:none!important}
-  .doc-tbl td{display:none;padding:0!important;height:auto!important}
+  .doc-tbl td{display:none;padding:0!important;height:auto!important;background:none!important}
   .doc-tbl td:nth-child(1){display:block;min-width:0}
   .doc-tbl td:nth-child(3){display:block}
   .doc-tbl .doc-t{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -457,4 +457,18 @@
   .proto-who .seg{display:flex}
   .proto-who .seg button{flex:1;min-width:0;padding-left:4px;padding-right:4px}
   .proto-who .pw-l{display:none}
+}
+
+/* Kontakt > Dokumenty, karta K vyřízení (20. 11. 2026): na mobilu termín a tlačítko pod názvem */
+@media (max-width:599px){
+  .doc-todo-r{flex-wrap:wrap;row-gap:8px;margin:0 -16px;padding:16px}
+  .doc-todo-t{flex:1 1 0}
+  .doc-todo-w{width:auto;flex:1 1 100%;padding-left:48px}
+  .doc-todo-r>.btn{margin-left:48px}
+}
+
+/* Editace kontaktu a profilu: fotka nahoře, tlačítka Nahrát a Odebrat pod ní (20. 11. 2026) */
+@media (max-width:599px){
+  .ph-edit{flex-wrap:wrap}
+  .ph-edit #ph-prev,.ph-edit #uph-prev{flex:1 1 100%;margin:0 0 8px}
 }
