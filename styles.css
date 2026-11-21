@@ -311,10 +311,10 @@ body.rail .toast{left:calc(50% + 36px)}
 
 /* Záložky podle Figmy: posun do boku, přechod a šipka jen tam, kde jsou další */
 .tabbar{position:relative;min-width:0}
-.tabs{display:flex;gap:0;height:44px;border-bottom:1px solid var(--n100);margin-bottom:24px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;user-select:none;scroll-behavior:auto}
+.tabs{display:flex;gap:24px;height:44px;border-bottom:1px solid var(--n100);margin-bottom:24px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;user-select:none;scroll-behavior:auto}
 .tabs::-webkit-scrollbar{display:none}
 .tabs.drag{cursor:grabbing}.tabs.drag .tab{pointer-events:none}
-.tab{flex:none;display:flex;align-items:center;height:44px;padding:0 16px;margin:0;color:var(--gray);font:500 14px/20px Poppins;border-bottom:2px solid transparent}
+.tab{flex:none;display:flex;align-items:center;height:44px;padding:0 24px;margin:0;color:var(--gray);font:500 14px/20px Poppins;border-bottom:2px solid transparent}
 .tab:hover{color:var(--n900)}
 .tab.on{color:var(--teal-a);border-bottom-color:var(--teal-a)}
 .tab-ov{position:absolute;top:0;width:48px;height:43px;display:none;align-items:center;color:var(--n700);z-index:2}
