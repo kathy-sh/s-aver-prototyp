@@ -71,7 +71,7 @@ ACT.exportc=el=>{const t=el.dataset.t,s=listState(t);exportModal(el.dataset.sel?
 
 // ---- Detail ----
 // Souhlasy a komunikace hned za Časovou osou: před oslovením se mají zkontrolovat, nesmí být schované za šipkou.
-const TABS=[['zakladni','Základní údaje'],['osa','Časová osa'],['souhlasy','Souhlasy a komunikace'],['ukoly','Úkoly'],['obchod','Obchod'],['dokumenty','Dokumenty'],['dalsi','Další údaje'],['integrace','Integrace'],['historie','Historie změn']];
+const TABS=[['zakladni','Základní údaje'],['osa','Časová osa'],['souhlasy','Souhlasy a komunikace'],['ukoly','Úkoly'],['obchod','Obchod'],['fakturace','Fakturace'],['dokumenty','Dokumenty'],['dalsi','Další údaje'],['integrace','Integrace'],['historie','Historie změn']];
 const F=(l,v)=>`<div class="field"><span class="lab">${l}</span><div class="val">${v==null||v===''?'—':v}</div></div>`;
 const ensure=c=>{if(c.history)return c;c.history=[{who:'S',f:'Vytvoření kontaktu',t:'Vytvořil kontakt importem z Excelu.',d:'1. 9. 2026'}];const AK={call:['Hovor','call','Hovor s klientem'],mail:['E-mail','sms','E-mail klientovi'],meet:['Schůzka','people','Schůzka s klientem']}[c.actType];c.timeline=c.timeline||[...(AK&&c.act?[{g:tlGroup(c.act),k:AK[0],ic:AK[1],d:fmt(c.act),t:AK[2],x:'',who:c.owner}]:[]),{g:'Starší',k:'Systém',ic:'setting-2',d:'1. 9. 2026',t:'Kontakt vytvořen',x:'Kontakt byl přidán do systému importem z Excelu.',who:'S'}];c.consentTo=c.consentTo||'2028-09-01';c.consents=c.consents||{commercial:'Povoleno',marketing:'Neudělen',profiling:'Neudělen',personal:'Udělen'};c.addresses=c.addresses||[{id:'a1',type:c.type==='osoba'?'Trvalé bydliště':'Sídlo',def:true,street:'—',city:c.city,zip:'—',region:'—',state:'Česká republika'}];c.docs=c.docs||{op:false,driver:false,passport:false,other:false};c.links=c.links||[];c.personal=c.personal||[];return c;};
 const tagCell=c=>{const all=[...c.tags,...(c.personal||[])];return `<button class="tag-btn" data-a="people" data-id="${c.id}" aria-haspopup="dialog">${all.length?`<span class="chip">${esc(all[0])}</span>${all.length>1?`<span class="av-more">+${all.length-1}</span>`:''}`:'<span class="mute">Žádné</span>'}</button>`;};
@@ -130,8 +130,8 @@ function viewContact(id,tab){const c=contact(id);if(!c)return viewMissing('x');e
    ${sum}
    <div class="det-bar" id="dt"><div class="det-mini" inert>${pic('a40')}<div class="det-mini-b"><div class="det-mini-n" title="${full}">${full}</div><div class="det-mini-f">${facts}</div></div>${acts}</div>
    <div class="det-sum" id="dsum" hidden>${sum}</div>
-   <nav class="tabs">${TABS.map(([k,l])=>`<a class="tab ${tab===k?'on':''}" href="#/kontakt/${c.id}/${k}">${l}${k==='ukoly'&&open?` (${open})`:''}</a>`).join('')}</nav></div>`;})()}`;
-  const body={zakladni:tabBasic,osa:tabTimeline,ukoly:tabTasks,obchod:tabDeals,dokumenty:tabDocs,dalsi:tabExtra,integrace:tabInteg,historie:tabHist,souhlasy:tabConsents}[tab](c);
+   <nav class="tabs">${TABS.filter(([k])=>k!=='fakturace'||(typeof canBillAny==='function'&&canBillAny())).map(([k,l])=>`<a class="tab ${tab===k?'on':''}" href="#/kontakt/${c.id}/${k}">${l}${k==='ukoly'&&open?` (${open})`:''}</a>`).join('')}</nav></div>`;})()}`;
+  const body={zakladni:tabBasic,osa:tabTimeline,ukoly:tabTasks,obchod:tabDeals,fakturace:c=>typeof canBillAny==='function'&&canBillAny()?iContactCard(c):viewError('403').html,dokumenty:tabDocs,dalsi:tabExtra,integrace:tabInteg,historie:tabHist,souhlasy:tabConsents}[tab](c);
   return {nav:list,html:head+body};
 }
 // Prázdná pole se neukazují. Kolik jich chybí, říká odkaz do editace.

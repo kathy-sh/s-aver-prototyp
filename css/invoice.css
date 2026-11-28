@@ -1,0 +1,58 @@
+/* Šablona faktury A4 (794 × 1123 px). Jednoduchá a přehledná: bílý papír, tenké linky, jeden barevný akcent. Poppins, mřížka 8. */
+.ivp-wrap{position:relative;background:var(--n100);border-radius:8px;padding:32px;margin-bottom:16px;overflow:hidden;display:flex;justify-content:center;cursor:zoom-in}
+.ivp-open{position:absolute;right:16px;top:16px;display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--n200);border-radius:8px;padding:4px 16px;font:500 12px/24px Poppins;color:var(--n900);box-shadow:var(--shadow)}
+.ivp{width:794px;min-height:1123px;flex:none;background:#fff;box-shadow:0 2px 12px rgba(19,26,28,.12);padding:64px 64px 48px;display:flex;flex-direction:column;font:400 12px/20px Poppins;color:var(--n900);font-variant-numeric:tabular-nums;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ivp-logo{display:flex;align-items:center;gap:16px;font:600 14px/20px Poppins;margin-bottom:32px}
+.ivp-mono{width:40px;height:40px;border-radius:8px;background:var(--dark);color:#fff;display:grid;place-content:center;font:600 14px/20px Poppins}
+.ivp-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding-bottom:24px;border-bottom:1px solid var(--n200)}
+.ivp-no{font:600 28px/36px Poppins;margin:0;letter-spacing:-.3px}
+.ivp-kind{color:var(--n500)}
+.ivp-lab{font:500 11px/16px Poppins;color:var(--n500);margin-bottom:8px}
+.ivp-parties{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:32px 0}
+.ivp-name{font:600 14px/20px Poppins;margin-bottom:4px}
+.ivp-ids{margin-top:8px;color:var(--n700)}
+.ivp-info{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:16px 24px;background:var(--n50);border-radius:8px}
+.ivp-info>div{display:flex;flex-direction:column;gap:4px}
+.ivp-kv{display:flex;justify-content:space-between;gap:16px}.ivp-kv>span:first-child{color:var(--n500)}.ivp-kv .b{font-weight:600}
+.ivp-items{width:100%;border-collapse:collapse;margin-top:40px}
+.ivp-items th{font:500 11px/16px Poppins;color:var(--n500);text-align:left;padding:0 0 8px;border-bottom:1px solid var(--n900)}
+.ivp-items td{padding:16px 0;border-bottom:1px solid var(--n200);vertical-align:top}
+.ivp-items th+th,.ivp-items td+td{padding-left:16px}
+.ivp-items .r{text-align:right;white-space:nowrap}
+.ivp-sum{margin:24px 0 0 auto;width:320px;display:flex;flex-direction:column;gap:4px}
+.ivp-grand{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:8px;padding:16px 0 0;border-top:1px solid var(--n900)}
+.ivp-grand span{font:600 14px/20px Poppins}.ivp-grand b{font:600 24px/32px Poppins;color:var(--teal-a)}
+.ivp-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:auto;padding-top:48px;color:var(--n700)}
+.ivp-qr{display:flex;align-items:center;gap:16px}.ivp-qr svg{width:88px;height:88px;fill:var(--n900);flex:none}.ivp-qr b{color:var(--n900)}
+.ivp-by{text-align:right}
+.ivp-note{margin-top:24px;color:var(--n700)}
+.iv-att{border:1px solid var(--n200);border-radius:8px;padding:8px 16px}
+/* Celá faktura přes obrazovku */
+.ivv{position:fixed;inset:0;z-index:200;background:rgba(19,26,28,.9);display:flex;flex-direction:column}
+.ivv-bar{display:flex;align-items:center;gap:8px;padding:8px 16px 8px 24px;background:var(--dark);color:#fff;font-size:14px}
+.ivv-bar .btn{background:#fff}
+.ivv-x{border:0;background:none;color:#fff;cursor:pointer;display:grid;place-content:center;width:40px;height:40px}
+.ivv-body{flex:1;overflow:auto;padding:32px 16px;display:flex;justify-content:center;align-items:flex-start}
+.ivv-body .ivp{box-shadow:0 8px 32px rgba(0,0,0,.32)}
+@media (max-width:1199px){.ivp-wrap{padding:16px;justify-content:flex-start}}
+@media (max-width:899px){.ivp-wrap{padding:0;background:none;display:block}.ivp-wrap .ivp{zoom:.86}.ivv-body .ivp{zoom:.9}}
+@media (max-width:599px){.ivp-wrap .ivp{zoom:.44}.ivv-body{padding:8px}.ivv-body .ivp{zoom:.47}.ivv-bar{padding-left:16px;flex-wrap:wrap}.ivp-open{top:8px;right:8px}}
+/* Tisk / PDF: jen faktura */
+@media print{
+  @page{size:A4;margin:0}
+  body.iv-printing *{visibility:hidden}
+  body.iv-printing .ivp,body.iv-printing .ivp *{visibility:visible}
+  body.iv-printing .ivp{position:fixed;left:0;top:0;box-shadow:none;zoom:1}
+}
+/* Průběh faktury a náhled e-mailu */
+.iv-flow{list-style:none;margin:0;padding:0}
+.iv-flow li{display:flex;align-items:center;gap:16px;padding:8px 0;border-bottom:1px solid var(--n100)}
+.iv-flow li:last-child{border-bottom:0}
+.iv-flow li.plan,.iv-flow li.off{color:var(--n700)}
+.iv-fi{width:32px;height:32px;border-radius:50%;display:grid;place-content:center;flex:none;background:var(--n100)}
+.iv-fi.grn{background:var(--green-bg);color:var(--green)}.iv-fi.tea{background:var(--teal-bg);color:var(--teal-a)}.iv-fi.amb{background:var(--amber-bg);color:var(--amber)}.iv-fi.mute{color:var(--n500)}
+.iv-fd{width:80px;flex:none}
+.btn-link{border:0;background:none;padding:0;color:var(--teal-a);font:500 14px/20px Poppins;cursor:pointer;white-space:nowrap}
+.iv-mail{margin-top:16px;border:1px solid var(--n200);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.iv-mail pre{white-space:pre-wrap;font:400 14px/20px Poppins;margin:16px 0;padding-top:16px;border-top:1px solid var(--n100)}
+@media (max-width:599px){.iv-flow li{flex-wrap:wrap;gap:8px}.iv-fd{width:auto}}

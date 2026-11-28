@@ -5,7 +5,7 @@ const SSO={
   apple:['Apple','<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#131A1C" d="M17.05 12.54c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.8 1.3 10.35.86 1.25 1.89 2.65 3.24 2.6 1.3-.05 1.79-.84 3.36-.84 1.57 0 2.01.84 3.39.81 1.4-.02 2.29-1.27 3.14-2.53.99-1.45 1.4-2.86 1.42-2.93-.03-.01-2.72-1.04-2.74-4.13zM14.46 4.9c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.29.69-3.03 1.56-.66.77-1.24 2-1.09 3.18 1.15.09 2.33-.58 3.05-1.45z"/></svg>'],
 };
 const coloredLogo=()=>LOGO.replace(/fill="white"/g,'fill="#77676c"').replace(/<path d="M8\.94917[^>]*fill="#77676c"/,m=>m.replace('#77676c','#224f5d')).replace(/<path d="M14\.5111[^>]*fill="#77676c"/,m=>m.replace('#77676c','#41acb6'));
-const PERSONAS={AN:['Alena Novotná','alena.novotna@saver.example'],JD:['Jana Dvořáková','jana.dvorakova@saver.example'],PN:['Petra Nováková','petra.novakova@saver.example']};
+const PERSONAS={AN:['Alena Novotná','alena.novotna@saver.example'],JD:['Jana Dvořáková','jana.dvorakova@saver.example'],PN:['Petra Nováková','petra.novakova@saver.example'],VH:['Viktor OSVČ','viktor.horak@poradce.example']};
 function viewLogin(){const s=ui('login',{who:'AN',more:false,err:false,forgot:false,showPw:false});
   const ssoBtn=k=>`<button class="sso" data-a="sso" data-k="${k}">${SSO[k][1]}Pokračovat s účtem ${SSO[k][0]}</button>`;
   const head=(t)=>`<div class="lg-logo">${coloredLogo()}</div><div class="lg-head"><h1>${t}</h1></div>`;

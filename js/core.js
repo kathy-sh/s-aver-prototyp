@@ -1,15 +1,20 @@
 // Jádro: stav, směrování, sdílené komponenty. Bez závislostí, běží ze souboru.
 const ACT_LATE=[];
-const KEY='saver-proto-v13';
-let DB; try{DB=JSON.parse(localStorage.getItem(KEY));}catch(e){} if(!DB)DB=seedData();
+const KEY='saver-proto-v14';
+// OSVČ (persona Viktor Horák) má vlastní účet a vlastní data, viz solo.js
+const SOLO='VH';
+const dbKey=id=>id===SOLO?KEY+'-osvc':KEY;
+const seedFor=id=>id===SOLO?seedSolo():seedData();
 let ME; try{ME=localStorage.getItem(KEY+'-me');}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}};
-const setMe=id=>{ME=id;delete UI.dash;try{id?localStorage.setItem(KEY+'-me',id):localStorage.removeItem(KEY+'-me');}catch(e){}};
-const resetAll=()=>{try{localStorage.removeItem(KEY);}catch(e){} DB=seedData();Object.keys(UI).forEach(k=>delete UI[k]);save();toast('Ukázková data jsou obnovená');render();};
+let DB; try{DB=JSON.parse(localStorage.getItem(dbKey(ME)));}catch(e){} if(!DB)DB=seedFor(ME);
+const save=()=>{try{localStorage.setItem(dbKey(ME),JSON.stringify(DB));}catch(e){}};
+const setMe=id=>{const swap=(id===SOLO)!==(ME===SOLO);ME=id;delete UI.dash;try{id?localStorage.setItem(KEY+'-me',id):localStorage.removeItem(KEY+'-me');}catch(e){}
+  if(swap){DB=null;try{DB=JSON.parse(localStorage.getItem(dbKey(id)));}catch(e){}if(!DB)DB=seedFor(id);Object.keys(UI).forEach(k=>{if(k!=='login')delete UI[k];});if(typeof soloAfterLoad==='function')soloAfterLoad();}};
+const resetAll=()=>{try{localStorage.removeItem(dbKey(ME));}catch(e){} DB=seedFor(ME);Object.keys(UI).forEach(k=>delete UI[k]);save();toast('Ukázková data jsou obnovená');render();};
 const UI={}; // stav obrazovek: filtry a stránkování se při návratu zachovají
 const ui=(k,d)=>UI[k]||(UI[k]=d);
 const isMgr=()=>ME==='JD';
-const isAdmin=()=>ME==='PN';
+const isAdmin=()=>ME==='PN'||ME===SOLO;
 const me=()=>user(ME)||user('AN');
 
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -103,6 +108,10 @@ function route(p){
     case 'ukoly':return viewTasks();
     case 'ukol':return c==='upravit'?viewTaskForm(b):viewTask(b);
     case 'projekty':return viewProjects();
+    case 'vykazy':return viewVykazy();
+    case 'chyba':return viewError(b||'404');
+    case 'fakturace':return b==='nova'?viewInvNew():viewInvoices(b||'faktury');
+    case 'faktura':return viewInvoice(b);
     case 'projekt':return c==='upravit'?viewProjectForm(b):viewProject(b,c||'prehled');
     case 'dochazka':return viewAttendance(b||'moje');
     case 'uzivatele':return viewUsers();
@@ -117,13 +126,13 @@ function route(p){
     default:return viewMissing(a);
   }
 }
-function viewMissing(a){const erp=[...NAV_BASE,...NAV_ERP].flatMap(g=>g.items).find(i=>i[0]===a);const names={kalendar:'Kalendář',obchod:'Obchod',dokumenty:'Dokumenty',export:'Export & Import',nastaveni:'Nastavení'};
+function viewMissing(a){const erp=[...NAV_BASE,...NAV_ERP].flatMap(g=>g.items).find(i=>i[0]===a);const names={kalendar:'Kalendář',obchod:'Obchod',dokumenty:'Dokumenty',export:'Export & Import',nastaveni:'Nastavení'};if(!erp&&!names[a])return viewError('404');if(erp)return viewError('501');
   return {nav:a,html:`<div class="page-head"><h1>${esc((DB.settings&&DB.settings.names[a])||names[a]||(erp?erp[2]:'Stránka nenalezena'))}</h1></div><div class="card empty">${ic('flag')}<h3>Tento modul zatím není navržený</h3><a class="btn" href="#/prehled">Zpět na Přehled</a></div>`};}
 
 // Boční menu: Přehled nahoře, skupiny uprostřed, nastavení dole. Viz Figma, sekce Menu V2.
-const NAV_BASE=[{g:'Práce',items:[['kontakty','user','Kontakty','#/kontakty/osoby',[['firmy','Organizace','#/kontakty/firmy'],['osoby','Osoby','#/kontakty/osoby']]],['work','task-square','Projekty & Úkoly','#/ukoly',[['projekty','Projekty','#/projekty'],['ukoly','Úkoly','#/ukoly']]],['kalendar','calendar','Kalendář','#/kalendar'],['obchod','briefcase','Obchod','#/obchod'],['dokumenty','document','Dokumenty','#/dokumenty']]},{g:'Lidé',items:[['dochazka','calendar-tick','Docházka','#/dochazka'],['uzivatele','people','Uživatelé','#/uzivatele']]}];
+const NAV_BASE=[{g:'Práce',items:[['kontakty','user','Kontakty','#/kontakty/osoby',[['firmy','Organizace','#/kontakty/firmy'],['osoby','Osoby','#/kontakty/osoby']]],['work','task-square','Projekty & Úkoly','#/ukoly',[['projekty','Projekty','#/projekty'],['ukoly','Úkoly','#/ukoly'],['vykazy','Výkazy času','#/vykazy']]],['kalendar','calendar','Kalendář','#/kalendar'],['obchod','briefcase','Obchod','#/obchod'],['fakturace','wallet-money','Fakturace','#/fakturace'],['dokumenty','document','Dokumenty','#/dokumenty']]},{g:'Lidé',items:[['dochazka','calendar-tick','Docházka','#/dochazka'],['uzivatele','people','Uživatelé','#/uzivatele']]}];
 const NAV_ERP=[{g:'Prodej',items:[['erp-nabidky','note-text','Nabídky','#/erp-nabidky'],['erp-objednavky','task','Objednávky','#/erp-objednavky'],['erp-faktury','document','Fakturace','#/erp-faktury']]},{g:'Finance',items:[['erp-ucetnictvi','chart','Účetnictví','#/erp-ucetnictvi'],['erp-banka','wallet-money','Banka','#/erp-banka'],['erp-pokladna','wallet','Pokladna','#/erp-pokladna']]},{g:'Sklad',items:[['erp-zasoby','folder','Zásoby','#/erp-zasoby'],['erp-nakup','briefcase','Nákup','#/erp-nakup']]},{g:'Personalistika',items:[['erp-mzdy','wallet-money','Mzdy','#/erp-mzdy'],['erp-nabor','user-add','Nábor','#/erp-nabor']]},{g:'Provoz',items:[['erp-majetek','buildings','Majetek','#/erp-majetek'],['erp-servis','setting-4','Servis','#/erp-servis']]}];
-const navGroups=()=>DB.navErp?[...NAV_BASE,...NAV_ERP]:NAV_BASE;
+const navGroups=()=>{const g0=DB.navErp?[...NAV_BASE,...NAV_ERP]:NAV_BASE,g=typeof canBillAny==='function'&&!canBillAny()?g0.map(x=>({...x,items:x.items.filter(i=>i[0]!=='fakturace')})):g0;return ME===SOLO?g.map(x=>({...x,items:x.items.filter(i=>!['dochazka','uzivatele'].includes(i[0]))})).filter(x=>x.items.length):g;};
 const navOn=(it,nav)=>nav===it[0]||(it[4]&&it[4].some(s=>s[0]===nav));
 let navSub={},navCur=null;
 const navSubOpen=(it,nav)=>navSub[it[0]]!==undefined?navSub[it[0]]:navOn(it,nav);
@@ -160,13 +169,13 @@ function tabsInit(){document.querySelectorAll('nav.tabs').forEach(t=>{if(t.paren
 ACT_LATE.push(()=>{ACT.tabscroll=el=>{const t=el.parentElement.querySelector('nav.tabs');t.scrollBy({left:(+el.dataset.v)*Math.round(t.clientWidth*.5),behavior:'smooth'});};});
 addEventListener('resize',()=>document.querySelectorAll('nav.tabs').forEach(tabHint));
 function shell(content,nav,foot){
-  const unread=DB.notifications.filter(n=>n.un&&(n.to===(isMgr()?'manager':'user')||isAdmin()&&n.to==='admin')).length;
+  const unread=DB.notifications.filter(n=>n.un&&(n.to===(isMgr()?'manager':'user')||isAdmin()&&n.to==='admin'||n.to==='bill'&&typeof canBillAny==='function'&&canBillAny())).length;
   return `<header class="header"><button class="head-btn burger" data-a="navopen" aria-label="Menu" aria-expanded="false">${icN('menu')}</button><a class="logo" href="#/prehled" aria-label="S-aver, Přehled">${LOGO}</a>
     <div class="search" id="gs"><div class="box"><span class="sib">${icN('search-normal')}</span><input id="gsi" placeholder="Hledat..." autocomplete="off" aria-label="Hledat..." readonly></div></div><button class="head-btn head-search" data-a="gsopen" aria-label="Hledat">${icN('search-normal')}</button>
     ${typeof workPills==='function'?workPills():''}<div class="head-actions">${typeof attHead==='function'?attHead():''}<button class="head-btn" data-a="notif" aria-label="Notifikace">${icN('notification')}${unread?`<span class="dot">${unread}</span>`:''}</button>
     <button class="head-btn credits" data-a="j_credits" aria-haspopup="dialog"><span class="nib">${icN('wallet')}</span>666 kreditů</button>
     <a class="head-btn" href="#/napoveda" aria-label="Nápověda" data-tip="Nápověda">${icN('question-circle')}</a>
-    <span class="head-btn"><img class="me" src="assets/img/uzivatel.png" alt="Účet" data-a="account"></span></div></header>
+    <span class="head-btn">${ME===SOLO?`<span class="av a40 me" data-a="account" role="button" tabindex="0" aria-label="Účet">VH</span>`:`<img class="me" src="assets/img/uzivatel.png" alt="Účet" data-a="account">`}</span></div></header>
   ${sidebar(nav)}<div class="nav-scrim" data-a="navclose"></div>
   <main class="main ${foot?'has-foot':''}"><div class="wrap">${content}</div>${foot||''}</main>`;
 }
@@ -221,12 +230,14 @@ ACT.pagenext=el=>{UI[el.dataset.k].page++;render();window.scrollTo(0,0);};
 ACT.pagego=el=>{const s=UI[el.dataset.k];s.page=Math.max(0,(parseInt(el.value)||1)-1);render();};
 ACT.reveal=el=>{const sp=el.parentElement.querySelector('[data-sv]');const open=sp.textContent===sp.dataset.sf;sp.textContent=open?sp.dataset.sv:sp.dataset.sf;el.innerHTML=ic(open?'eye':'eye-slash','s16');};
 ACT.copy=el=>{const v=el.dataset.v;if(navigator.clipboard)navigator.clipboard.writeText(v).catch(()=>{});toast('Zkopírováno: '+v);};
-ACT.account=el=>{const u=me();popover(el,`<div style="padding:8px"><div class="sb">${esc(u.name)}</div><div class="small mute">${esc(u.pos)} · ${isAdmin()?'Administrátor':isMgr()?'Nadřízený':'Uživatel'}</div></div><hr><a class="it" href="#/uzivatel/${u.id}/prehled">${ic('user','s16')}Můj profil</a><button class="it" data-a="switch">${ic('people','s16')}Přepnout na ${ME==='AN'?'Janu (nadřízená)':ME==='JD'?'Petru (administrátor)':'Alenu (uživatelka)'}</button><button class="it" data-a="naverp">${ic('task','s16')}${DB.navErp?'Skrýt ukázku ERP modulů':'Ukázat menu s ERP moduly'}</button><button class="it" data-a="reset">${ic('refresh','s16')}Obnovit ukázková data</button><hr><button class="it" data-a="logout">${ic('logout','s16')}Odhlásit se</button>`,264);};
+ACT.account=el=>{const u=me();popover(el,`<div style="padding:8px"><div class="sb">${esc(u.name)}</div><div class="small mute">${esc(u.pos)} · ${ME===SOLO?'OSVČ, vše si dělá sám':isAdmin()?'Administrátor':isMgr()?'Nadřízený':'Uživatel'}</div></div><hr><a class="it" href="#/uzivatel/${u.id}/prehled">${ic('user','s16')}Můj profil</a><div class="small mute" style="padding:8px 16px 4px">Prototyp: přepnout na</div>${PROTO_WHO.map(([id,n,r])=>`<button class="it acc-who ${ME===id?'on':''}" data-a="switchto" data-id="${id}" ${ME===id?'aria-current="true"':''}>${av(id)}<span class="spacer">${n}<span class="small mute" style="display:block">${r}</span></span>${ME===id?ic('tick-circle','s16'):''}</button>`).join('')}<hr><button class="it" data-a="naverp">${ic('task','s16')}${DB.navErp?'Skrýt ukázku ERP modulů':'Ukázat menu s ERP moduly'}</button><a class="it" href="#/chyba/404">${ic('danger','s16')}Ukázka chybových stránek</a><button class="it" data-a="reset">${ic('refresh','s16')}Obnovit ukázková data</button><hr><button class="it" data-a="logout">${ic('logout','s16')}Odhlásit se</button>`,264);};
 ACT.j_credits=el=>popover(el,`<div style="padding:8px"><div class="small mute">Zůstatek</div><b style="font:600 22px/28px Poppins">666 kreditů</b><div class="small mute" style="margin-top:8px">Kredity se čerpají za SMS, elektronické podpisy a ověření v registrech.</div></div><hr>${isAdmin()?`<a class="it" href="#/nastaveni/fakturace">${ic('wallet','s16')}Dobít a vyúčtování</a>`:`<div class="small mute" style="padding:8px">Kredity dobíjí administrátor.</div>`}`,264);
+const PROTO_WHO=[['AN','Alena Novotná','Uživatelka'],['JD','Jana Dvořáková','Nadřízená'],['PN','Petra Nováková','Administrátorka'],['VH','Viktor Horák','OSVČ, vše si dělá sám']];
+ACT.switchto=el=>{const id=el.dataset.id;if(id===ME){closeLayer();return;}setMe(id);closeLayer();location.hash='#/prehled';render();toast('Přihlášeni jako '+me().name);};
 ACT.switch=()=>{setMe(ME==='AN'?'JD':ME==='JD'?'PN':'AN');closeLayer();location.hash='#/prehled';render();toast('Přihlášeni jako '+me().name);};
 ACT.reset=()=>{closeLayer();resetAll();};
 ACT.logout=()=>{setMe(null);closeLayer();location.hash='#/login';render();};
-ACT.notif=el=>{const k=isMgr()?'manager':'user';const st=ui('notif',{only:false});const list=DB.notifications.filter(n=>(n.to===k||isAdmin()&&n.to==='admin')&&(!st.only||n.un));const un=DB.notifications.filter(n=>(n.to===k||isAdmin()&&n.to==='admin')&&n.un).length;
+ACT.notif=el=>{const k=isMgr()?'manager':'user';const st=ui('notif',{only:false});const list=DB.notifications.filter(n=>(n.to===k||isAdmin()&&n.to==='admin'||n.to==='bill'&&typeof canBillAny==='function'&&canBillAny())&&(!st.only||n.un));const un=DB.notifications.filter(n=>(n.to===k||isAdmin()&&n.to==='admin'||n.to==='bill'&&typeof canBillAny==='function'&&canBillAny())&&n.un).length;
   layer().innerHTML=`<div class="panel" role="dialog"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h2 style="font:600 16px/24px Poppins">Notifikace</h2><a data-a="notifread" class="small">Označit vše jako přečtené</a></div><div class="row" style="margin-bottom:8px"><button class="btn ${st.only?'':'pri'}" data-a="notiffilter" data-v="0">Vše</button><button class="btn ${st.only?'pri':''}" data-a="notiffilter" data-v="1">Nepřečtené (${un})</button></div>${list.length?list.map(n=>`<div class="noti ${n.un?'un':''}" data-a="notifgo" data-id="${n.id}"><span class="d ${n.un?'':'o'}"></span><div><div class="m">${esc(n.m)}</div><div class="small mute">${esc(n.d)} · ${esc(n.k)}</div></div></div>`).join(''):`<div class="empty" style="padding:24px">${ic('notification')}<h3>Máte všechno přečtené</h3></div>`}</div>`;};
 ACT.notiffilter=el=>{UI.notif.only=el.dataset.v==='1';ACT.notif();};
 ACT.notifread=()=>{DB.notifications.forEach(n=>n.un=false);save();render();ACT.notif();};

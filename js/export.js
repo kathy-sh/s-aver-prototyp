@@ -13,14 +13,20 @@ const XWHAT=()=>[
   ['ukoly','Úkoly','task-square','Včetně projektů, termínů a řešitelů',['xlsx','csv']],
   ['obchody','Obchody','briefcase','Otevřené i uzavřené, s fázemi a částkami',['xlsx','csv']],
   ['udalosti','Události kalendáře','calendar','Schůzky, hovory a prohlídky',['ics','xlsx']],
+  ['vykazy','Výkazy času','timer-start','Odpracovaný čas se stavem a částkami',['xlsx','csv']],
+  ...(isAdmin()||bSolo()?[['faktury','Faktury pro účetnictví','wallet-money','Vydané faktury za období do účetního programu',['isdoc','pohoda','money','csv']]]:[]),
   ...(isMgr()||isAdmin()?[['dochazka','Docházka','calendar-tick','Měsíční přehled týmu',['xlsx','csv']]]:[]),
   ...(isAdmin()?[['uzivatele','Uživatelé','people','Účty, role, týmy a pobočky',['xlsx','csv']]]:[])];
-const XFMT={xlsx:'Excel (XLSX)',csv:'CSV',vcf:'vCard (do telefonu)',ics:'iCalendar (ICS)'};
+const XFMT={xlsx:'Excel (XLSX)',csv:'CSV',vcf:'vCard (do telefonu)',ics:'iCalendar (ICS)',isdoc:'ISDOC (e-faktura)',pohoda:'Pohoda XML',money:'Money S3 XML'};
+const xPer=k=>k==='vykazy'||k==='faktury';
 const fmtOk=f=>({xlsx:'expXlsx',csv:'expCsv',vcf:'expVcf'}[f]?pv('org',{xlsx:'expXlsx',csv:'expCsv',vcf:'expVcf'}[f],true):true);
 const myReports=()=>DB.users.filter(u=>u.boss===ME&&u.state!=='Neaktivní');
 const isContact=k=>k==='osoby'||k==='organizace';
 // Rozsah: kolik záznamů export obsáhne
-function xScopeN(k,sc){const all=xCnt[k]();if(sc==='all')return all;if(sc==='team')return Math.round(all*0.42);return k==='osoby'?148:k==='organizace'?37:Math.max(1,Math.round(all*0.18));}
+function xScopeN(k,sc){
+  if(k==='vykazy'){const V=UI.vyk||{},P=sc==='own'?['own','',V.od||'0000',V.do||'9999']:bPeriods.find(x=>x[0]===sc)||bPeriods[0];return allEntries().filter(r=>eVisible(r.e,r.t)&&r.e.date>=P[2]&&r.e.date<=P[3]).length;}
+  if(k==='faktury'){iSeed();const P=bPeriods.find(x=>x[0]===sc)||bPeriods[0];return DB.invoices.filter(i=>i.state!=='draft'&&i.issued>=P[2]&&i.issued<=P[3]).length;}
+  const all=xCnt[k]();if(sc==='all')return all;if(sc==='team')return Math.round(all*0.42);return k==='osoby'?148:k==='organizace'?37:Math.max(1,Math.round(all*0.18));}
 
 // Historie: ukázková data pro stránkování a pohled podle role
 function xSeed(){if(DB.xfer)return;const W=['AN','TH','BS','JD','PS','MK','RP','PN','KB','LM'];const what=[['exp','osoby','xlsx'],['exp','ukoly','csv'],['imp','osoby','xlsx'],['exp','obchody','xlsx'],['exp','osoby','vcf'],['exp','udalosti','ics'],['imp','organizace','csv'],['exp','dochazka','xlsx'],['exp','organizace','csv']];
@@ -41,15 +47,17 @@ function viewExport(tab){xSeed();if(!XTABS.some(t=>t[0]===tab))tab='export';
 // ---------- Export ----------
 function xExport(){const s=ui('xexp',{what:'osoby',sc:'mine',fmt:'xlsx',cols:'list',sens:false});const W=XWHAT();if(!W.some(w=>w[0]===s.what))s.what='osoby';
   const w=W.find(x=>x[0]===s.what),fmts=w[4].filter(fmtOk);if(!fmts.includes(s.fmt))s.fmt=fmts[0];
-  const scopes=[['mine','Moje záznamy'],...(isMgr()||isAdmin()?[['team','Můj tým']]:[]),...(isAdmin()?[['all','Celá organizace']]:[])];if(!scopes.some(x=>x[0]===s.sc))s.sc='mine';
+  const per=xPer(s.what),scopes=per?[...bPeriods.filter(p=>p[0]!=='all').map(p=>[p[0],p[1]]),...(s.what==='vykazy'&&UI.vyk&&UI.vyk.per==='own'?[['own',`${fmt(UI.vyk.od)} – ${fmt(UI.vyk.do)}`]]:[])]:[['mine','Moje záznamy'],...(isMgr()||isAdmin()?[['team','Můj tým']]:[]),...(isAdmin()?[['all','Celá organizace']]:[])];if(per&&!scopes.some(x=>x[0]===s.sc))s.sc='tm';if(!scopes.some(x=>x[0]===s.sc))s.sc='mine';
   if(s.what==='dochazka'&&s.sc==='mine')s.sc='team';
   const n=xScopeN(s.what,s.sc),big=isContact(s.what)&&n>XLIM();
   const list=W.map(([k,l,icn,d])=>`<label class="x-what ${s.what===k?'on':''}"><input type="radio" name="xw" value="${k}" data-a="xset" data-on="change" data-k="what" ${s.what===k?'checked':''}><span class="x-ic">${ic(icn,'s20')}</span><span class="spacer"><span class="med">${l}</span><span class="small mute" style="display:block">${d}</span></span></label>`).join('');
   const sel=(k,l,opts)=>`<div class="field"><label for="x-${k}">${l}</label><select class="inp" id="x-${k}" data-a="xset" data-on="change" data-k="${k}">${opts.map(([v,t])=>`<option value="${v}" ${String(s[k])===v?'selected':''}>${t}</option>`).join('')}</select></div>`;
   const sensBox=isContact(s.what)?`<label class="row" style="margin-top:16px"><input type="checkbox" class="cb" data-a="xset" data-on="change" data-k="sens" ${s.sens?'checked':''}><span>Zahrnout citlivé údaje (RČ, doklady, bankovní spojení)${isMgr()||isAdmin()?'':'<span class="small mute" style="display:block">Jen u kontaktů, kde jste hlavní správce.</span>'}</span></label>`:'';
   return `<div class="x-grid"><section class="card"><div class="card-head"><h2>Co exportovat</h2></div><div class="x-list">${list}</div></section>
-  <section class="card"><div class="card-head"><h2>${esc(w[1])}</h2></div><div class="grid g3">${sel('sc','Rozsah',scopes.filter(x=>s.what!=='dochazka'||x[0]!=='mine'))}${sel('fmt','Formát',fmts.map(f=>[f,XFMT[f]]))}${s.fmt==='vcf'||s.fmt==='ics'?'':sel('cols','Sloupce',[['list','Jako v mém seznamu'],['all','Všechny sloupce']])}</div>${sensBox}
+  <section class="card"><div class="card-head"><h2>${esc(w[1])}</h2></div><div class="grid g3">${sel('sc',per?'Období':'Rozsah',scopes.filter(x=>s.what!=='dochazka'||x[0]!=='mine'))}${sel('fmt','Formát',fmts.map(f=>[f,XFMT[f]]))}${['vcf','ics','isdoc','pohoda','money'].includes(s.fmt)?'':sel('cols','Sloupce',[['list','Jako v mém seznamu'],['all','Všechny sloupce']])}</div>${sensBox}
   ${big?`<div class="banner" style="margin-top:16px">${ic('info-circle','s16')}<span>Export nad ${xNum(XLIM())} kontaktů uvidí vedení.</span></div>`:''}
+  ${s.what==='faktury'?`<div class="banner" style="margin-top:16px">${ic('info-circle','s16')}<span>Ke každé faktuře se přiloží PDF. Přímé napojení na účetní program zapnete v <a href="#/nastaveni/integrace">Nastavení > Integrace</a>.</span></div>`:''}
+  ${s.what==='vykazy'&&!canMoney()?`<p class="small mute" style="margin-top:16px">Export bude bez částek, ty vidí jen ten, komu to administrátor povolí.</p>`:''}
   <div class="x-foot"><span class="mute">${xNum(n)} ${n===1?'záznam':n<5&&n>1?'záznamy':'záznamů'}</span><button class="btn pri" data-a="xgo">${ic('export','s16')}Exportovat</button></div></section></div>`;}
 ACT.xset=el=>{const s=UI.xexp,k=el.dataset.k;s[k]=el.type==='checkbox'?el.checked:el.value;render();};
 ACT.xgo=()=>{const s=UI.xexp,n=xScopeN(s.what,s.sc);

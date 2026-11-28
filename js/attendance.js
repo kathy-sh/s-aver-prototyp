@@ -94,7 +94,7 @@ ACT.attout=()=>{const go2=()=>{const r=attRec();r.out=NOW;const u=user(ME);const
   if(DB.timer){closeLayer();tmrFinish(go2,'Před odchodem zapište čas u úkolu, který právě měříte.');return;}go2();};
 
 // Hlavička: jeden malý prvek vlevo od notifikací. Ráno „Příchod“, v práci čas dne; klik otevře přestávku a odchod.
-function attHead(){attSeed();const st=attState(),r=dayInfo(ME,TD),rec=attRec();
+function attHead(){if(ME===SOLO)return "";attSeed();const st=attState(),r=dayInfo(ME,TD),rec=attRec();
   if(st==='none')return `<button class="hp hp-go" data-a="attin">${ic('login','s16')}Příchod</button>`;
   if(st==='out')return `<button class="hp" data-a="attpop" aria-haspopup="dialog" data-tip="Dnes ${rec.first||rec.in}–${rec.out}"><i class="wp-dot"></i>Mimo práci</button>`;
   return `<button class="hp" data-a="attpop" aria-haspopup="dialog" data-tip="${st==='break'?'Přestávka':'V práci od '+(rec.first||rec.in)}"><i class="wp-dot ${st==='break'?'amb':'grn'}"></i>${st==='break'?'Přestávka':'<span class="hp-l">V práci</span>'+fmtMin(r.work)}</button>`;}
